@@ -14,5 +14,5 @@ for _, v in load_all():
     v, attached = split(v)
     versions.append(v)
     files += [{**f, "version": v["n"]} for f in attached]
-Path("data/log.json").write_text(dumps({"versions": versions, "versionFiles": files}), encoding="utf-8")
+Path("data/log.json").write_text(dumps({"versions": versions, "versionFiles": files}), encoding="utf-8", newline="\n")
 print("data/log.json: %d versions" % len(versions))

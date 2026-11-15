@@ -36,7 +36,7 @@ for v in new:
 if errors:
     sys.exit("Nothing written:\n  " + "\n  ".join(errors))
 for v in new:
-    path_of(v["n"]).write_text(dumps(v), encoding="utf-8")
+    path_of(v["n"]).write_text(dumps(v), encoding="utf-8", newline="\n")
     print("wrote %s: %s" % (path_of(v["n"]).as_posix(), v["message"]))
 if not new:
     print("The export has no new versions.")
