@@ -12,7 +12,7 @@ def path_of(n):
 
 
 def dumps(obj):
-    """The layout of every file under data/: two-space indentation, as the page's export writes it."""
+    """The layout of every file under data/: two-space indentation and a final newline."""
     return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
 
 

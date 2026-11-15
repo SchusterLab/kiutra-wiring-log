@@ -18,21 +18,17 @@ To recover, revert the commit that changed it (`git revert <commit>`) and push.
 
 ## How to add a version
 
-You can edit the wiring on the page itself, on your own computer.
 In a clone of the repository:
 
-1. Run `python scripts/build_log.py`, which combines the version files into `data/log.json`.
-2. Open `index.html` from disk in a browser, click *Import JSON* in the footer, and choose `data/log.json`.
-3. Click *Edit*, make the change, then click *Review & save*, describe the change, and save.
-4. Click *Export history (JSON)* to download the history, as `wiring-log-v<number>.json`.
-5. Run `python scripts/add_version.py <downloaded file>`. It writes each new version as a new file in `data/versions/`, and writes nothing if the export changes an existing version.
-6. Run `python scripts/check_log.py`, then commit the new file and push to `main`.
+1. Copy the newest version file to the next number, for example `data/versions/v0001.json` to `data/versions/v0002.json`.
+2. In the new file, set `n` to the new number, `ts` to the current time in UTC, `author` to your GitHub username, and `message` to one line saying what changed.
+3. Make the change in its `state`, which is the complete wiring. `AGENTS.md` describes the format.
+4. Preview it: run `python scripts/build_log.py` and then `python -m http.server`, and open http://localhost:8000.
+5. Run `python scripts/check_log.py`, then commit the new file and push to `main`.
 
 The site shows the new version about a minute after the push.
-`data/log.json` is not committed; the publish workflow builds it.
-
-You can also write the new version file by hand, as `AGENTS.md` describes.
-To preview the site with your change, run `python scripts/build_log.py` and then `python -m http.server`, and open http://localhost:8000.
+`scripts/build_log.py` combines the version files into `data/log.json`, the file the page reads.
+That file is not committed; the publish workflow builds it.
 
 ## Datasheets
 
