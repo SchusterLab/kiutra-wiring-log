@@ -771,8 +771,8 @@ function sharedBackend(db, canWrite) {
 }
 
 // ---------- GitHub backend (read-only) ----------
-// The log is data/log.json in the repo, as {versions, versionFiles}. The page only reads it. To change the wiring,
-// add a version to that file and push (see README.md); the site republishes a minute or so later.
+// The page reads data/log.json, {versions, versionFiles}, which the publish workflow builds from the version files in
+// data/versions (scripts/build_log.py). To change the wiring, add a version file and push (see README.md).
 const GH_FILE = "data/log.json";
 function githubBackend() {
   let last = "", cb0 = null, lastPoll = 0;

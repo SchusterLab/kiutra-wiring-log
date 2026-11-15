@@ -1,4 +1,4 @@
-# Check data/log.json on every push and pull request, and publish the site from main.
+# Check the version files on every push and pull request, and publish the site from main.
 name: Publish
 on:
   push:
@@ -30,6 +30,8 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Combine the version files into data/log.json
+        run: python3 scripts/build_log.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
