@@ -1,0 +1,1776 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Slab Kiutra Wiring Log</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a cryostat cross-section. Temperature stages run top to bottom as shaded bands,
+   each wiring line is a vertical lane, and components sit on the plate they are anchored to. */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --ink: #17202a;
+  --muted: #5a6775;
+  --rule: #c7d0d9;
+  --accent: #1c64a6;
+  --accent-ink: #ffffff;
+  --cold: #6f88a3;
+  --plate: #1f2a35;
+  --lane-rf: #2b3947;
+  --lane-dc: #7a5b2e;
+  --lane-sc: #7b2fbf;
+  --add: #1e7a46;
+  --del: #b23a33;
+  --warn-bg: #fff4d6;
+  --warn-ink: #6b4a00;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1318; --surface: #161d25; --ink: #e2e8ee; --muted: #93a1af; --rule: #2d3945;
+    --accent: #6aafe8; --accent-ink: #0b1622; --cold: #3f6a95; --plate: #c3cdd7;
+    --lane-rf: #b8c4cf; --lane-sc: #c79cf2; --lane-dc: #d1a462; --add: #5fc78b; --del: #f0877f;
+    --warn-bg: #3a2f12; --warn-ink: #f1d58a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1318; --surface: #161d25; --ink: #e2e8ee; --muted: #93a1af; --rule: #2d3945;
+  --accent: #6aafe8; --accent-ink: #0b1622; --cold: #3f6a95; --plate: #c3cdd7;
+  --lane-rf: #b8c4cf; --lane-sc: #c79cf2; --lane-dc: #d1a462; --add: #5fc78b; --del: #f0877f;
+  --warn-bg: #3a2f12; --warn-ink: #f1d58a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 48px;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.muted { color: var(--muted); }
+
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
+header.top h1 { font-size: 26px; font-weight: 700; letter-spacing: .01em; }
+.eyebrow { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.dot.live { background: var(--add); }
+
+nav.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding-block: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .02em; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--rule); background: var(--surface); padding: 6px 12px; border-radius: 6px; font-weight: 500; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.danger { color: var(--del); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn.small { padding: 3px 8px; font-size: 12px; }
+
+.banner { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; background: var(--warn-bg); color: var(--warn-ink); }
+.banner.info { background: var(--surface); color: var(--ink); border: 1px solid var(--rule); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+
+/* Diagram */
+.scroll { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); touch-action: pan-x pan-y;
+  /* As wide and as tall as the diagram, so only the page scrolls. */
+  overflow: hidden; width: max-content; min-width: 100%; box-sizing: border-box; }
+.diagram { display: grid; position: relative; min-width: min-content; transform-origin: 0 0; }
+.zoom-sizer { position: relative; overflow: hidden; }
+/* Touch screens: phone browsers misplace their own scroll indicators while the zoom resizes the content,
+   so the page draws its own, pinned to the box edges. Mouse and trackpad keep the native scrollbars. */
+.scroll-wrap { position: relative; }
+.sb { display: none; position: absolute; z-index: 3; border-radius: 3px; pointer-events: none; background: color-mix(in srgb, var(--ink) 50%, transparent); opacity: 0; transition: opacity .4s; }
+.sb.x { height: 4px; bottom: 3px; }
+.sb.y { width: 4px; right: 3px; }
+.sb.on { opacity: 1; transition: none; }
+@media (pointer: coarse) {
+  .scroll { scrollbar-width: none; }
+  .scroll::-webkit-scrollbar { display: none; }
+  .sb { display: block; }
+}
+.band { grid-column: 1 / -1; }
+.stage-label { grid-column: 1; padding: 8px 8px; overflow-wrap: anywhere; position: relative; z-index: 2; }
+.stage-label .t { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.1; }
+.stage-label .s { color: var(--muted); font-size: 12px; }
+.plate-bar { grid-column: 2 / -1; align-self: center; height: 7px; background: var(--plate); z-index: 0; }
+.plate-bar.thin { height: 3px; }
+.lane { z-index: 0; position: relative; pointer-events: none; }
+.lane::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-1px); background: var(--lane-rf); opacity: .55; }
+.lane.dc::before { width: 8px; transform: translateX(-4px); opacity: .5; background: repeating-linear-gradient(90deg, var(--lane-dc) 0 1px, transparent 1px 2.33px); }
+.lane.empty-end::before { bottom: 50%; }
+/* A coax line that carries superconducting (NbTi) cable, i.e. an output line: its own colour and a heavier stroke, so it reads apart from the stainless input lines in grey print too. */
+.lane.rf.sc::before { width: 3px; transform: translateX(-1.5px); background: var(--lane-sc); opacity: .85; }
+.lhead { padding: 8px 4px 6px; text-align: center; z-index: 2; position: relative; border-bottom: 1px solid var(--rule); background: var(--surface); }
+.lhead button { all: unset; cursor: pointer; display: block; width: 100%; border-radius: 4px; }
+.lhead button:focus-visible { outline: 2px solid var(--accent); }
+.lhead .n { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.lhead .p { font-size: 12px; color: var(--muted); line-height: 1.3; white-space: pre-line; }
+.lhead .att { font-variant-numeric: tabular-nums; font-size: 11px; color: var(--muted); }
+.lhead.sel { box-shadow: inset 0 -3px 0 var(--accent); }
+/* The line names again under the coldest stage, so a tall diagram reads from either end. */
+.lhead.lfoot { padding: 6px 4px 8px; border-bottom: 0; border-top: 1px solid var(--rule); background: transparent; }
+.lhead.lfoot.sel { box-shadow: inset 0 3px 0 var(--accent); }
+.cell { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 5px 2px; position: relative; z-index: 1; min-height: 40px; }
+.cell.region { min-height: 52px; }
+.chip { all: unset; box-sizing: border-box; cursor: pointer; max-width: 100%; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 0 3px; align-items: center; padding: 3px 4px 3px 3px; border-radius: 4px; border: 1.5px solid var(--ink); background: var(--surface); font-size: 10px; line-height: 1.3; text-align: left; }
+/* Symbols large, labels small: the symbol is what the eye scans the diagram for. */
+.chip svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+.chip .l { font-weight: 600; overflow-wrap: anywhere; }
+.chip .d { grid-column: 2; color: var(--muted); font-size: 9px; overflow-wrap: anywhere; white-space: pre-line; }
+.chip .d.link { color: var(--accent); }
+.chip .d.clip { color: var(--accent); display: inline-flex; align-items: center; gap: 3px; }
+.chip .d.clip svg { width: 11px; height: 11px; margin: 0; stroke-width: 1.8; }
+.chip.anchor .d.clip { grid-column: 1; }
+/* Connectors carry no symbol: the box on the plate already reads as one. */
+.chip.connector { grid-template-columns: minmax(0, 1fr); padding: 3px 8px; }
+.chip.connector .d, .chip.connector .d.clip { grid-column: 1; }
+/* A circulator with isolators drawn as its parts, port 3 facing the line that feeds it. */
+.chip.stacked { grid-template-columns: minmax(0, 1fr); text-align: center; }
+.chip.stacked .d, .chip.stacked .d.clip { grid-column: 1; justify-content: center; }
+.chip svg.stack { grid-column: 1 / -1; justify-self: center; margin: 2px 0 3px; stroke-width: 1.15; }
+.chip svg.stack text { fill: currentColor; stroke: none; font-size: 7px; text-anchor: middle; font-family: var(--font-body); }
+.lhead .dnu { color: var(--del); font-weight: 700; font-size: 12px; letter-spacing: .04em; line-height: 1.3; }
+
+/* Datasheets and links on a component */
+.atts { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.atts li { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 2px 8px; align-items: start; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg); }
+.atts svg { width: 16px; height: 16px; margin-top: 2px; stroke: var(--muted); fill: none; stroke-width: 1.6; }
+.atts a { color: var(--accent); font-weight: 500; overflow-wrap: anywhere; text-decoration: none; }
+.atts a:hover { text-decoration: underline; }
+.atts .sub { grid-column: 2; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.atts input { width: 100%; padding: 3px 6px; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); font-size: 13px; }
+.att-add { display: grid; gap: 6px; padding: 8px; border: 1px dashed var(--rule); border-radius: 5px; }
+.att-add .row { display: flex; flex-wrap: wrap; gap: 6px; }
+.att-add input { flex: 1 1 140px; min-width: 0; padding: 5px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg); }
+/* Above the chips, so a curve reaches a port drawn inside its part. */
+svg.links { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; overflow: visible; }
+svg.links path { fill: none; stroke: var(--lane-rf); stroke-width: 2; opacity: .8; }
+svg.links circle { fill: var(--lane-rf); }
+.chip.cable { border-color: transparent; background: color-mix(in srgb, var(--surface) 82%, transparent); }
+.chip.cable .l { font-weight: 500; }
+.chip.attenuator .l { font-variant-numeric: tabular-nums; }
+.chip.anchor { border-style: dashed; border-color: var(--muted); padding: 1px 6px; grid-template-columns: minmax(0, 1fr); }
+.chip.anchor .d { grid-column: 1; }
+.chip.anchor .l { font-weight: 500; color: var(--muted); }
+.chip.sel { outline: 2.5px solid var(--accent); outline-offset: 1px; }
+/* A puck port with nothing wired to it: red, so nobody connects to it. */
+.chip.dnu { border-color: var(--del); border-width: 2px; color: var(--del); }
+.chip.dnu .d { color: var(--del); }
+.chip.changed { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+.chip:focus-visible { outline: 2.5px solid var(--accent); }
+.add { border: 1px dashed var(--muted); background: var(--surface); color: var(--muted); border-radius: 4px; font-size: 11px; padding: 0 8px; line-height: 18px; }
+.add:hover { color: var(--accent); border-color: var(--accent); }
+/* Just right of the lane, so it reads as a value on the line rather than a part. */
+.nwrap { position: relative; max-width: 100%; display: flex; }
+.nphot { position: absolute; top: calc(100% + 2px); left: calc(50% + 6px); white-space: nowrap; z-index: 2; pointer-events: none; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.nphot i, .nstage i { font-family: var(--font-display); }
+.nstage { font-variant-numeric: tabular-nums; }
+.noisebar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 13px; }
+.noisebar label { display: inline-flex; align-items: center; gap: 6px; }
+.noisebar input { width: 3.6em; padding: 4px 6px; text-align: right; border: 1px solid var(--rule); border-radius: 5px; background: var(--surface); color: var(--ink); font: inherit; font-variant-numeric: tabular-nums; }
+.noisebar input[aria-invalid="true"] { border-color: var(--warn-ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); padding-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 4px; }
+.legend svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+/* Side panel */
+aside.panel { position: fixed; z-index: 5; top: 0; right: 0; bottom: 0; width: min(360px, 100vw); overflow-y: auto; align-content: start; display: grid; gap: 12px; background: var(--surface); border-left: 1px solid var(--rule); box-shadow: -8px 0 24px color-mix(in srgb, var(--ink) 18%, transparent);
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) max(14px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 14px) 14px; }
+aside.panel h2 { font-size: 18px; }
+.field { display: grid; gap: 4px; }
+.field label { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg); }
+.field textarea { min-height: 60px; resize: vertical; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ro dt { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ro dd { margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Changes and history */
+.changes { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.changes li { padding-left: 18px; position: relative; overflow-wrap: anywhere; }
+.changes li::before { position: absolute; left: 0; font-weight: 700; }
+.changes li.add::before { content: "+"; color: var(--add); }
+.changes li.remove::before { content: "−"; color: var(--del); }
+.changes li.change::before { content: "~"; color: var(--accent); }
+.history { display: grid; gap: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+.ver { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px 14px; padding: 14px 16px; border-top: 1px solid var(--rule); align-items: start; }
+.ver:first-child { border-top: 0; }
+.ver .num { font-variant-numeric: tabular-nums; font-family: var(--font-display); font-size: 14px; font-weight: 600; padding-top: 2px; }
+.ver .msg { font-weight: 600; overflow-wrap: anywhere; }
+.ver .meta { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ver .meta img { width: 18px; height: 18px; border-radius: 50%; }
+.ver .notes { font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ver .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.ver details summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+.ver .body { grid-column: 2 / 4; display: grid; gap: 6px; min-width: 0; }
+@media (max-width: 600px) { .ver { grid-template-columns: 1fr; } .ver .body { grid-column: 1; } .ver .acts { justify-content: flex-start; } }
+.cur-tag { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 1px 6px; border-radius: 3px; }
+.empty { padding: 40px 20px; text-align: center; color: var(--muted); }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 6px; z-index: 10; font-size: 13px; }
+/* File viewer: the frame cannot open the page's own files in a new tab, so they open here. */
+.viewer { position: fixed; inset: 0; z-index: 20; display: flex; align-items: stretch; justify-content: center; background: color-mix(in srgb, var(--ink) 55%, transparent);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) max(12px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 12px) max(12px, env(safe-area-inset-left, 0px)); }
+.viewer-box { width: min(980px, 100%); display: grid; grid-template-rows: auto minmax(0, 1fr); background: var(--surface); border-radius: 8px; overflow: hidden; }
+.viewer-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+.viewer-head h2 { font-size: 17px; overflow-wrap: anywhere; min-width: 0; }
+.viewer-body { overflow: auto; background: var(--bg); padding: 12px; display: grid; gap: 12px; justify-items: center; align-content: start; }
+.viewer-body canvas, .viewer-body img { max-width: 100%; height: auto; background: #fff; box-shadow: 0 1px 4px color-mix(in srgb, var(--ink) 25%, transparent); }
+.viewer-body .text { white-space: pre-wrap; overflow-wrap: anywhere; width: 100%; max-width: 80ch; background: var(--surface); padding: 12px 14px; border-radius: 6px; }
+.viewer-body .linkbox { width: 100%; max-width: 70ch; display: grid; gap: 12px; padding: 12px 0; }
+.viewer-body .linkbox p { margin: 0; }
+.viewer-body .linkbox a.btn { text-decoration: none; color: var(--ink); }
+.viewer-body .msg { color: var(--muted); padding: 40px 12px; text-align: center; }
+footer.foot #footsrc { display: grid; gap: 4px; min-width: 0; }
+.vfiles { overflow-wrap: anywhere; }
+.vfiles a { color: var(--accent); }
+footer.foot { margin-top: 20px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; }
+@media (prefers-reduced-motion: no-preference) { .chip, .btn { transition: border-color .12s, box-shadow .12s; } }
+html.wallpaper { zoom: .93; }
+.wallpaper nav.bar, .wallpaper #status, .wallpaper footer.foot, .wallpaper #banners { display: none !important; }
+.wallpaper body { padding-block: 10px 0; }
+</style>
+
+<header class="top">
+  <div>
+    <h1>Slab Kiutra Wiring Log</h1>
+  </div>
+  <div class="status" id="status"><span class="pill"><span class="dot"></span>Loading…</span></div>
+</header>
+<nav class="bar">
+  <div class="seg" role="group" aria-label="View">
+    <button id="tab-diagram" aria-pressed="true">Diagram</button>
+    <button id="tab-history" aria-pressed="false">History</button>
+  </div>
+  <div class="seg" role="group" aria-label="Lines shown" id="groupseg">
+    <button data-g="all" aria-pressed="true">All lines</button>
+    <button data-g="dc" aria-pressed="false">DC</button>
+    <button data-g="rf" aria-pressed="false">RF</button>
+  </div>
+  <div class="noisebar" id="noisebar"></div>
+  <div class="actions" id="topactions"></div>
+</nav>
+<div id="banners"></div>
+<main id="main"></main>
+<footer class="foot">
+  <span id="footsrc"></span>
+  <span><a class="btn small" href="https://github.com/SchusterLab/kiutra-wiring-log" target="_blank" rel="noopener" style="text-decoration:none">Source on GitHub</a> <button class="btn small" id="export">Export history (JSON)</button> <label class="btn small" id="importlbl" hidden>Import JSON<input type="file" id="import" accept="application/json,.json" hidden></label></span>
+</footer>
+<div class="toast" id="toast" hidden></div>
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+  <div class="viewer-box">
+    <div class="viewer-head">
+      <h2 id="viewer-title"></h2>
+      <span class="actions"><button class="btn small" id="viewer-save" hidden>Save a copy</button><button class="btn small" id="viewer-close">Close</button></span>
+    </div>
+    <div class="viewer-body" id="viewer-body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+if (new URLSearchParams(location.search).has("wallpaper")) { document.documentElement.classList.add("wallpaper"); document.documentElement.setAttribute("data-theme", "dark"); }
+// ---------- Baseline from the vendor drawings ----------
+const STAGES = [
+  { id: "rt", name: "300 K", sub: "Top plate" },
+  { id: "k40", name: "40 K", sub: "Plate" },
+  { id: "k4", name: "4 K", sub: "Plate" },
+  { id: "sh4", name: "4 K", sub: "Shield" },
+  { id: "guard", name: "Guard", sub: "250 mK" },
+  { id: "sample", name: "Sample stage", sub: "50 mK" },
+  { id: "puck", name: "Puck", sub: "50 mK" },
+];
+const TYPES = {
+  connector: "Connector", cable: "Cable", attenuator: "Attenuator", filter: "Filter",
+  amplifier: "Amplifier", isolator: "Circulator / isolator", coupler: "Directional coupler",
+  diplexer: "Diplexer", splitter: "Splitter / combiner", anchor: "Thermal anchor", other: "Other",
+};
+// Parts with more than two ports: another line can connect into one of them.
+const MULTIPORT = new Set(["isolator", "coupler", "diplexer", "splitter", "other"]);
+const PORT_HINTS = {
+  isolator: ["Input", "Output", "Sample", "Port 1", "Port 2", "Port 3"],
+  coupler: ["Input", "Through", "Coupled", "Isolated"],
+  diplexer: ["Common", "Low band", "High band"],
+  splitter: ["Sum", "Port 1", "Port 2"],
+  other: ["Port 1", "Port 2", "Port 3"],
+};
+const IMPORT_MSG = "Imported from the vendor wiring drawings";
+const BASELINE_DATE = "2026-10-21T17:49:00Z";
+// Until someone saves an edit, v1 is built from the drawing data above and nothing is stored.
+const baselineVersion = () => ({ n: 1, ts: BASELINE_DATE, author: null, message: IMPORT_MSG, notes: buildBaseline().meta.sources, state: buildBaseline(), virtual: true });
+const stored = (v) => { const c = { ...v }; delete c.virtual; return c; };
+const GLYPH = {
+  connector: '<rect x="4" y="4" width="10" height="10"/>',
+  cable: '<path d="M9 1c-4 3 4 5 0 8s4 5 0 8"/>',
+  attenuator: '<path d="M9 1v3l-4 2 8 2.5-8 2.5 8 2.5-4 1.5v3"/>',
+  filter: '<rect x="2" y="2" width="14" height="14"/><path d="M4 7h5c2 0 2 6 5 6"/>',
+  amplifier: '<path d="M3 15 9 3l6 12Z"/>',
+  isolator: '<circle cx="9" cy="9" r="6.5"/><path d="M12 6.5A4 4 0 1 0 12.5 11M12 4v2.8H9.3"/>',
+  coupler: '<path d="M2 6h14M5 12h8M7 6l-2 6M11 6l2 6"/>',
+  diplexer: '<path d="M9 17V9M9 9 3 2M9 9l6-7"/><rect x="1.5" y="1" width="3" height="3"/><path d="M14 2.5h3"/>',
+  splitter: '<path d="M9 17V9M9 9 3 2M9 9l6-7"/>',
+  anchor: '<path d="M2 7h14M2 11h14"/>',
+  other: '<circle cx="9" cy="9" r="3"/>',
+  clip: '<path d="M12.5 5.5 6.8 11.2a1.6 1.6 0 0 0 2.3 2.3l6-6a3.2 3.2 0 0 0-4.5-4.5l-6.2 6.2a4.8 4.8 0 0 0 6.8 6.8l4.6-4.6"/>',
+};
+let _seq = 0;
+const uid = (p) => p + Date.now().toString(36).slice(-4) + Math.random().toString(36).slice(2, 6) + (_seq++).toString(36);
+
+// The public copy leaves out files that are not public: attachments whose file is not in the repo are dropped.
+function buildBaseline() {
+  const st = buildBaseline0();
+  for (const l of st.lines) for (const it of l.items) if (it.attachments) {
+    it.attachments = it.attachments.filter((a) => a.kind !== "file" || ASSET_PATH[a.asset]);
+    if (!it.attachments.length) delete it.attachments;
+  }
+  return st;
+}
+function buildBaseline0() {
+  let k = 0;
+  const mk = (lineId, rows) => rows.map(([stage, at, type, label, detail, note, linkTo, atts]) => {
+    const it = { id: lineId + "-" + (++k), type, stage, at, label, detail: detail || "", note: note || "" };
+    if (linkTo) it._linkTo = linkTo;
+    if (atts) it.attachments = atts;
+    return it;
+  });
+  const dc = (id, name, use, filterLabel, filterDetail, filterNote, filterAtts) => ({
+    id, group: "dc", name, purpose: "24 lines\n" + use, note: "",
+    items: mk(id, [
+      ["rt", "plate", "connector", "D-Sub 25"],
+      ["rt", "region", "cable", "12×2 twisted pair", "Cu, ~3 Ω @ 300 K"],
+      ["k40", "plate", "anchor", "Thermalized"],
+      ["k4", "plate", "anchor", "Thermalized"],
+      ["sh4", "plate", "anchor", "Thermalized"],
+      ["guard", "plate", "connector", "Micro-D"],
+      ["guard", "region", "cable", "12×2 twisted pair", "NbTi, ~18 Ω @ T > Tc"],
+      ["sample", "plate", "connector", "Micro-D"],
+      ["sample", "region", "filter", filterLabel, filterDetail, filterNote, null, filterAtts],
+      ["sample", "region", "cable", "12×2 twisted pair", "Low-impedance copper, < 0.1 Ω @ 4 K, ~0.5 Ω @ 300 K"],
+      ["puck", "plate", "connector", "Puck PCB"],
+    ]),
+  });
+  const rfTop = (a40, a4) => [
+    ["rt", "plate", "connector", "SMA"],
+    ["rt", "region", "cable", "219-SS-SS"],
+    ["k40", "plate", "attenuator", a40 + " dB"],
+    ["k40", "region", "cable", "219-SS-SS"],
+    ["k4", "plate", "attenuator", a4 + " dB"],
+  ];
+  const rfIn = (id, name, purpose, aG, aS, filter, tail, note) => ({
+    id, group: "rf", name, purpose, note: note || "",
+    items: mk(id, [
+      ...rfTop(6, 10),
+      ["k4", "region", "cable", "Flexible"],
+      ["sh4", "region", "cable", "086-SS-SS"],
+      ["guard", "plate", "attenuator", aG + " dB"],
+      ["guard", "region", "cable", "086-SS-SS"],
+      ["sample", "plate", "attenuator", aS + " dB"],
+      filter,
+      ...tail,
+    ]),
+  });
+  // Vendor PDFs stored with the page (the viewer cannot open other sites); `source` is where each copy came from.
+  const sheet = (id, name, asset, size, source) => ({ id, kind: "file", name, asset, size, source });
+  const rfOut = (id, name, purpose, lna, lnaDetail, lnaSheet) => ({
+    id, group: "rf", name, purpose, note: "",
+    items: mk(id, [
+      ...rfTop(0, 0),
+      ["k4", "region", "cable", "Flexible"],
+      ["k4", "region", "amplifier", lna, lnaDetail, "", null, [sheet(id + "-lna-att1", "Datasheet " + lna + " (this unit)", ...lnaSheet)]],
+      ["k4", "region", "cable", "Flexible"],
+      ["sh4", "region", "cable", "119-NbTi-NbTi"],
+      ["guard", "plate", "attenuator", "0 dB"],
+      ["guard", "region", "cable", "119-NbTi-NbTi"],
+      ["sample", "plate", "attenuator", "0 dB"],
+      ["sample", "region", "isolator", "Circulator + 2 isolators", "LNF-CIISISC4-12A, 4–12 GHz, 50 Ω term.", "", null,
+        [sheet(id + "-iso-att1", "Datasheet LNF-xxxxxxC4_12A series", "f9c92193b1561a24f16b5325b404f225", 4700285, "https://lownoisefactory.com/wp-content/uploads/2022/01/lnf-xxxxxxc4_12a.pdf")]],
+      ["sample", "region", "filter", "IR filter HERD-2", "Sweden Quantum, DC – 13.5 GHz", "", null,
+        [sheet(id + "-herd-att1", "Datasheet Sweden Quantum HERD-2", "9dffe49aceab745a6cbba7f5b7e2de3e", 817090, "https://www.swedenquantum.com/docs/HERD-2%20Data%20sheet.pdf")]],
+      ["sample", "region", "cable", "Flexible"],
+      ["puck", "plate", "connector", "Mini-coax"],
+    ]),
+  });
+  const toPuck = [["sample", "region", "cable", "Flexible"], ["puck", "plate", "connector", "Mini-coax"]];
+  const toIso = (target) => [["sample", "region", "cable", "Flexible", "", "", { line: target, type: "isolator", port: "Port 3" }], ["puck", "plate", "connector", "Mini-coax", "", "Not connected on the drawing."]];
+  const lpir = ["sample", "region", "filter", "Low-pass + IR filter", "ScalinQ CliQ1, cut-off 1 GHz", "", null,
+    [{ id: "cliq-att1", kind: "file", name: "Datasheet ScalinQ CliQ series (V1.4)", asset: "66fed11c045159cd605a161c229f783a", size: 2451666 }]];
+  const qmIR = ["sample", "region", "filter", "IR filter", "Quantum Microwave, 5 dB at 10 GHz", "", null,
+    [sheet("qmir-att1", "Datasheet Quantum Microwave QMC-CRYOIRF-004", "9717cddd398b9f9b5244c8ab9e22d8b0", 312195, "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf")]];
+  const resolveLinks = (st) => {
+    for (const l of st.lines) for (const it of l.items) if (it._linkTo) {
+      const t = it._linkTo; delete it._linkTo;
+      const target = st.lines.find((x) => x.id === t.line).items.find((x) => x.type === t.type);
+      it.link = { line: t.line, item: target.id, port: t.port };
+    }
+    return st;
+  };
+  return resolveLinks({
+    meta: {
+      system: "kiutra L-Type Rapid",
+      sources: "DC wiring tree J001245 (update 2026-10-16); RF wiring tree J001245 (update 2026-10-21)",
+    },
+    stages: STAGES.map((s) => ({ ...s })),
+    lines: [
+      // Vendor test certificates, stored as artifact assets.
+      dc("M1", "M1", "for large current", "LC filter + thermalizer", "Basel Precision Instruments πSlimMFT25-mΩ, 300 kHz cutoff", "",
+        [{ id: "M1-att1", kind: "file", name: "BASPI certificate SlimMFT25-mΩ, SN 2017", asset: "83d450ccdcbe0ab449422d0a70d11767", size: 545051 }]),
+      dc("M2", "M2", "for small current", "RC filter + thermalizer", "Basel Precision Instruments SlimMFT25-RCRC, 30 kHz cutoff", "",
+        [{ id: "M2-att1", kind: "file", name: "BASPI certificate SlimMFT25-100Ω-RCRC, 2018", asset: "a45fed3ff1de6f79df5e0b0f8779aa08", size: 388301 }]),
+      rfIn("RF1", "RF1", "for charge drive", 20, 10, qmIR, toPuck),
+      rfIn("RF2", "RF2", "for charge drive", 20, 10, qmIR, toPuck),
+      rfIn("RF3", "RF3", "for fast flux", 0, 0, lpir, toPuck),
+      rfIn("RF4", "RF4", "for fast flux", 0, 0, lpir, toPuck),
+      rfIn("RF5", "RF5", "feedline port 1 in", 20, 30, qmIR, toIso("RF6")),
+      rfOut("RF6", "RF6", "feedline port 1 out", "LNF-LNC0.3_14B", "0.3 – 14 GHz, +37 dB", ["7c388f2b05fd8e93143c19a1d0d9b555", 349490, "https://www.lownoisefactory.com/datasheets/LNF-LNC0.3_14B_sn6142H.pdf"]),
+      rfIn("RF7", "RF7", "feedline port 2 in", 20, 30, qmIR, toIso("RF8")),
+      rfOut("RF8", "RF8", "feedline port 2 out", "LNF-LNC6_20D", "4 – 20 GHz, +34 dB", ["b8773362750a47aba292797754be35d8", 768621, "https://www.lownoisefactory.com/datasheets/LNF-LNC6_20D_sn5901H.pdf"]),
+    ],
+  });
+}
+
+// ---------- Helpers ----------
+const $ = (s) => document.querySelector(s);
+const clone = (o) => JSON.parse(JSON.stringify(o));
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "html") el.innerHTML = v; // only used for static glyph markup
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : String(c));
+  return el;
+}
+const glyph = (t) => h("span", { html: '<svg viewBox="0 0 18 18" aria-hidden="true">' + (GLYPH[t] || GLYPH.other) + "</svg>" }).firstChild;
+// A part labelled like "Circulator + 2 isolators" is drawn as its parts, top to bottom: the isolators (arrows up, towards the amplifier),
+// then the circulator with ports 2 (up), 3 (side, towards the line that feeds it) and 1 (down, towards the sample).
+// `side` is where port 3 points. Returns null for parts that are not such a stack.
+function stackSymbol(it, side) {
+  if (it.type !== "isolator") return null;
+  const lab = it.label || "";
+  const circ = /circulator/i.test(lab);
+  const m = /(\d+)\s*isolators?/i.exec(lab);
+  const nIso = Math.min(3, m ? +m[1] : /isolator/i.test(lab) ? 1 : 0);
+  if ((circ ? 1 : 0) + nIso < 2) return null;
+  const W = 46, cx = 23, f = (x) => (side === "right" ? W - x : x);
+  const s = [];
+  const ln = (x1, y1, x2, y2) => s.push('<path d="M' + x1 + " " + y1 + "L" + x2 + " " + y2 + '"/>');
+  const tx = (x, y, t) => s.push('<text x="' + x + '" y="' + y + '">' + t + "</text>");
+  let y = 4;
+  ln(cx, 0, cx, y);
+  for (let i = 0; i < nIso; i++) {
+    const c = y + 7;
+    s.push('<circle cx="' + cx + '" cy="' + c + '" r="7"/>');
+    ln(cx, c + 4, cx, c - 4);
+    s.push('<path d="M' + (cx - 2.5) + " " + (c - 1.5) + "L" + cx + " " + (c - 4) + "L" + (cx + 2.5) + " " + (c - 1.5) + '"/>');
+    y = c + 7;
+    const gap = i === nIso - 1 && circ ? 9 : 5;
+    ln(cx, y, cx, y + gap); y += gap;
+  }
+  let H = y;
+  if (circ) {
+    const c = y + 10;
+    tx(f(cx + 6), y - 1.5, "2");
+    s.push('<circle cx="' + cx + '" cy="' + c + '" r="10"/>');
+    // Circulation 1 → 2 → 3: counterclockwise on screen with port 3 on the left, clockwise with it on the right.
+    s.push('<path d="M' + f(cx + 5.5) + " " + c + "A5.5 5.5 0 1 " + (side === "right" ? 1 : 0) + " " + cx + " " + (c + 5.5) + '"/>');
+    s.push('<path d="M' + f(cx - 2.5) + " " + (c + 3) + "L" + cx + " " + (c + 5.5) + "L" + f(cx - 2.5) + " " + (c + 8) + '"/>');
+    ln(f(cx - 10), c, f(2), c);
+    s.push('<circle data-port="port 3" cx="' + f(2) + '" cy="' + c + '" r="1.5"/>');
+    tx(f(7), c - 3, "3");
+    ln(cx, c + 10, cx, c + 18);
+    tx(f(cx + 6), c + 17, "1");
+    H = c + 18;
+  } else { ln(cx, y, cx, y + 4); H = y + 4; }
+  const el = h("span", { html: '<svg class="stack" viewBox="0 0 ' + W + " " + H + '" aria-hidden="true">' + s.join("") + "</svg>" }).firstChild;
+  // Drawn 1.35× its own units, in step with the larger symbols on the other parts.
+  el.style.width = W * 1.35 + "px"; el.style.height = H * 1.35 + "px";
+  return el;
+}
+const stageName = (st, id) => { const s = st.stages.find((x) => x.id === id); return s ? (s.name + " " + s.sub.toLowerCase()) : id; };
+const fmtDate = (iso) => { try { return new Date(iso).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }); } catch { return iso; } };
+const lsGet = (k) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } };
+const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 2600); }
+// Noise photon occupation after each attenuator, as in Krinner et al., arXiv:1806.07862, Eq. (1):
+// n_i = n_(i-1) / A_i + (A_i - 1) / A_i · n_BE(T_i), starting from n_BE at the top stage's temperature.
+// A_i is the linear attenuation and T_i the temperature of the stage the attenuator sits on; cable loss is ignored.
+let noiseFreqGHz = (() => { const v = lsGet("wiringlog-noise-ghz"); return typeof v === "number" && v > 0 ? v : 6; })();
+const stageTemp = (s) => { const m = /(\d+(?:\.\d+)?)\s*(mK|K)\b/.exec(s.name + " " + s.sub); return m ? +m[1] * (m[2] === "mK" ? 1e-3 : 1) : null; };
+// The sample stage temperature is tunable; the puck sits on the sample stage and follows it. Display only, never saved to the record.
+const TUNED_STAGES = ["sample", "puck"];
+let sampleTempMK = (() => { const v = lsGet("wiringlog-sample-mk"); return typeof v === "number" && v > 0 ? v : null; })();
+// Above 125 mK on the sample stage, the guard runs at twice the sample stage temperature.
+const GUARD_FOLLOWS_ABOVE_MK = 125;
+const tunedT = (s) => {
+  if (!sampleTempMK) return null;
+  if (TUNED_STAGES.includes(s.id)) return sampleTempMK * 1e-3;
+  if (s.id === "guard" && sampleTempMK > GUARD_FOLLOWS_ABOVE_MK) return 2 * sampleTempMK * 1e-3;
+  return null;
+};
+const stageT = (s) => { const t = tunedT(s); return t != null ? t : stageTemp(s); };
+const fmtTemp = (T) => (T < 1 ? +(T * 1e3).toPrecision(4) + " mK" : +T.toPrecision(4) + " K");
+// The stage's subtitle with the tuned temperature in place of the recorded one.
+const stageSub = (s) => (tunedT(s) != null && stageTemp(s) ? s.sub.replace(/(\d+(?:\.\d+)?)\s*(mK|K)\b/, fmtTemp(stageT(s))) : s.sub);
+const nBE = (fHz, T) => 1 / Math.expm1(6.62607015e-34 * fHz / (1.380649e-23 * T));
+function noisePhotons(st, fGHz) {
+  const out = new Map(), temps = new Map(st.stages.map((s) => [s.id, stageT(s)]));
+  const top = st.stages.length ? temps.get(st.stages[0].id) : null;
+  if (!top || !(fGHz > 0)) return out;
+  const f = fGHz * 1e9, pos = (i) => st.stages.findIndex((s) => s.id === i.stage) * 2 + (i.at === "plate" ? 0 : 1);
+  for (const l of st.lines) {
+    // Output lines (those with an amplifier) carry the signal up, so the downward cascade does not describe them.
+    if (l.items.some((it) => it.type === "amplifier")) continue;
+    let n = nBE(f, top);
+    const items = l.items.map((it, k) => [it, k]).sort((a, b) => pos(a[0]) - pos(b[0]) || a[1] - b[1]).map((x) => x[0]);
+    for (const it of items) {
+      if (it.type !== "attenuator") continue;
+      const m = /(-?\d+(?:\.\d+)?)\s*dB/i.exec(it.label || ""), T = temps.get(it.stage);
+      if (!m || !T) { n = NaN; continue; }
+      const A = Math.pow(10, +m[1] / 10);
+      n = n / A + (A - 1) / A * nBE(f, T);
+      out.set(it.id, n);
+    }
+  }
+  return out;
+}
+// Plain numbers from 1 up (365, 48.6); compact E notation below 1 (9.7e-2) keeps the label narrow beside the lane.
+function fmtN(n) {
+  if (!isFinite(n)) return "—";
+  if (n === 0) return "0";
+  if (n >= 100) return Math.round(n).toString();
+  if (n >= 1) return n.toPrecision(3);
+  return n.toExponential(1);
+}
+// Rewrite the n values in place, so typing in the frequency box keeps its focus.
+function updateNoiseLabels() {
+  if (!lastDiagram) return;
+  const map = noisePhotons(lastDiagram.st, noiseFreqGHz);
+  lastDiagram.g.querySelectorAll(".nphot").forEach((el) => { el.lastChild.textContent = " = " + fmtN(map.get(el.dataset.nitem)); });
+  lastDiagram.g.querySelectorAll(".nstage").forEach((el) => {
+    const s = lastDiagram.st.stages.find((x) => x.id === el.dataset.nstage);
+    el.lastChild.textContent = " = " + fmtN(s ? nBE(noiseFreqGHz * 1e9, stageT(s)) : NaN);
+  });
+  lastDiagram.g.querySelectorAll("[data-ssub]").forEach((el) => {
+    const s = lastDiagram.st.stages.find((x) => x.id === el.dataset.ssub);
+    if (s) el.textContent = stageSub(s);
+  });
+  requestAnimationFrame(layoutDiagram);
+}
+function renderNoiseBar() {
+  const input = h("input", { id: "f-noise-ghz", type: "text", inputmode: "decimal", value: String(noiseFreqGHz),
+    oninput: (e) => {
+      const v = +e.target.value.trim().replace(",", ".");
+      const ok = e.target.value.trim() !== "" && isFinite(v) && v > 0;
+      e.target.setAttribute("aria-invalid", ok ? "false" : "true");
+      if (!ok) return;
+      noiseFreqGHz = v; lsSet("wiringlog-noise-ghz", v); updateNoiseLabels();
+    } });
+  const rec = lastDiagram && lastDiagram.st ? lastDiagram.st.stages.find((x) => x.id === "sample") : null;
+  const recMK = rec && stageTemp(rec) ? stageTemp(rec) * 1e3 : 50;
+  const tin = h("input", { id: "f-sample-mk", type: "text", inputmode: "decimal", value: String(sampleTempMK || +recMK.toPrecision(4)),
+    oninput: (e) => {
+      const v = +e.target.value.trim().replace(",", ".");
+      const ok = e.target.value.trim() !== "" && isFinite(v) && v > 0;
+      e.target.setAttribute("aria-invalid", ok ? "false" : "true");
+      if (!ok) return;
+      sampleTempMK = v; lsSet("wiringlog-sample-mk", v); updateNoiseLabels();
+    } });
+  return [
+    h("label", { for: "f-noise-ghz", title: "Thermal photon occupation after each attenuator (Krinner et al., arXiv:1806.07862, Eq. 1)" }, "Noise photons ", h("i", {}, "n"), " at", input, "GHz"),
+    h("label", { for: "f-sample-mk", title: "Used for the noise photon numbers only; the recorded stage temperature is unchanged. Above 125 mK the guard is taken at twice this temperature." }, "Sample stage", tin, "mK")];
+}
+function attenuation(line) {
+  let sum = 0, any = false;
+  for (const it of line.items) if (it.type === "attenuator") { const m = /(-?\d+(?:\.\d+)?)\s*dB/i.exec(it.label); if (m) { sum += +m[1]; any = true; } }
+    // An amplifier's gain ("+37 dB" in its description) counts against the attenuation.
+    else if (it.type === "amplifier") { const m = /([+-]?\d+(?:\.\d+)?)\s*dB/i.exec(it.detail || ""); if (m) { sum -= +m[1]; any = true; } }
+  return any ? sum : null;
+}
+
+// ---------- Diff and merge ----------
+const ITEM_FIELDS = ["type", "label", "detail", "stage", "at", "note", "link", "attachments"];
+const LINE_FIELDS = ["name", "group", "purpose", "note"];
+const fval = (it, f) => (f === "link" ? JSON.stringify(it.link || null) : f === "attachments" ? JSON.stringify(it.attachments && it.attachments.length ? it.attachments : null) : (it[f] || ""));
+// Attachments: {id, kind: "file", name, asset, size} for an uploaded datasheet, {id, kind: "link", name, url} for a web link.
+// Datasheets live in the repo's files/ folder. A file uploaded on this site stores its repo path as `asset`.
+const ASSET_PATH = {
+  "7c388f2b05fd8e93143c19a1d0d9b555": "files/LNF-LNC0.3_14B_sn6142H.pdf",
+  "b8773362750a47aba292797754be35d8": "files/LNF-LNC6_20D_sn5901H.pdf",
+  "f9c92193b1561a24f16b5325b404f225": "files/lnf-xxxxxxc4_12a.pdf",
+  "9dffe49aceab745a6cbba7f5b7e2de3e": "files/HERD-2-datasheet.pdf",
+  "66fed11c045159cd605a161c229f783a": "files/ScalinQ-CliQ-datasheet-V1.4.pdf",
+  "9717cddd398b9f9b5244c8ab9e22d8b0": "files/QMC-CRYOIRF-004.pdf",
+};
+const attHref = (a) => (a.kind === "file" ? (ASSET_PATH[a.asset] || (String(a.asset).includes("/") ? a.asset : "/_blob/" + a.asset)) : a.url);
+const attName = (a) => a.name || (a.kind === "file" ? "File" : a.url);
+const safeUrl = (s) => { try { const u = new URL(s.trim()); return u.protocol === "https:" || u.protocol === "http:" ? u.href : null; } catch { return null; } };
+const fmtSize = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " kB");
+function attachmentChanges(iA, iB) {
+  const A = new Map((iA.attachments || []).map((a) => [a.id, a])), B = new Map((iB.attachments || []).map((a) => [a.id, a]));
+  const kind = (a) => (a.kind === "file" ? "file" : "link");
+  const out = [];
+  for (const [id, a] of B) if (!A.has(id)) out.push(["add", "attached " + kind(a) + " “" + attName(a) + "”"]);
+  for (const [id, a] of A) if (!B.has(id)) out.push(["remove", "removed " + kind(a) + " “" + attName(a) + "”"]);
+  for (const [id, b] of B) { const a = A.get(id); if (a && (attName(a) !== attName(b) || a.url !== b.url)) out.push(["change", kind(b) + " “" + attName(a) + "” → “" + attName(b) + "”" + (a.url !== b.url ? " (" + b.url + ")" : "")]); }
+  return out;
+}
+function findItem(st, lineId, itemId) {
+  const l = st.lines.find((x) => x.id === lineId); const it = l && l.items.find((x) => x.id === itemId);
+  return it ? { line: l, item: it } : null;
+}
+function linkText(st, link) {
+  if (!link) return "";
+  const t = findItem(st, link.line, link.item);
+  return (t ? t.line.name + " " + (t.item.label || "(unnamed)") : "a removed part") + (link.port ? " (" + link.port + ")" : "");
+}
+// Lines that feed into each multi-port part: itemId -> [{line, item, port}]
+function incomingLinks(st) {
+  const m = new Map();
+  for (const l of st.lines) for (const it of l.items) if (it.link) {
+    if (!m.has(it.link.item)) m.set(it.link.item, []);
+    m.get(it.link.item).push({ line: l, item: it, port: it.link.port });
+  }
+  return m;
+}
+function unlinkTargets(st, ids) {
+  for (const l of st.lines) for (const it of l.items) if (it.link && ids.has(it.link.item)) delete it.link;
+}
+function diffStates(a, b) {
+  const out = [];
+  const la = new Map(a.lines.map((l) => [l.id, l])), lb = new Map(b.lines.map((l) => [l.id, l]));
+  const where = (st, it) => stageName(st, it.stage) + (it.at === "plate" ? "" : " (below)");
+  const desc = (it) => (TYPES[it.type] || it.type).toLowerCase() + " “" + it.label + "”";
+  for (const l of b.lines) if (!la.has(l.id)) out.push({ kind: "add", text: "Added line " + l.name + " (" + l.items.length + " components)" });
+  for (const l of a.lines) if (!lb.has(l.id)) out.push({ kind: "remove", text: "Removed line " + l.name });
+  for (const lB of b.lines) {
+    const lA = la.get(lB.id); if (!lA) continue;
+    for (const f of LINE_FIELDS) if ((lA[f] || "") !== (lB[f] || "")) out.push({ kind: "change", text: lB.name + ": line " + f + " “" + (lA[f] || "") + "” → “" + (lB[f] || "") + "”" });
+    const ia = new Map(lA.items.map((i) => [i.id, i])), ib = new Map(lB.items.map((i) => [i.id, i]));
+    for (const it of lB.items) if (!ia.has(it.id)) out.push({ kind: "add", text: lB.name + ": added " + desc(it) + " at " + where(b, it), item: it.id });
+    for (const it of lA.items) if (!ib.has(it.id)) out.push({ kind: "remove", text: lB.name + ": removed " + desc(it) + " from " + where(a, it) });
+    for (const iB of lB.items) {
+      const iA = ia.get(iB.id); if (!iA) continue;
+      for (const f of ITEM_FIELDS) if (fval(iA, f) !== fval(iB, f)) {
+        if (f === "link") {
+          const text = !iB.link ? "disconnected from " + linkText(a, iA.link) : !iA.link ? "connected to " + linkText(b, iB.link) : "connection “" + linkText(a, iA.link) + "” → “" + linkText(b, iB.link) + "”";
+          out.push({ kind: "change", text: lB.name + ": " + desc(iB) + " " + text, item: iB.id });
+          continue;
+        }
+        if (f === "attachments") {
+          for (const [kind, text] of attachmentChanges(iA, iB)) out.push({ kind, text: lB.name + ": " + desc(iB) + " " + text, item: iB.id });
+          continue;
+        }
+        const from = f === "stage" || f === "at" ? where(a, iA) : (iA[f] || "∅");
+        const to = f === "stage" || f === "at" ? where(b, iB) : (iB[f] || "∅");
+        out.push({ kind: "change", text: lB.name + ": " + desc(iB) + " " + (f === "at" || f === "stage" ? "moved" : f) + " “" + from + "” → “" + to + "”", item: iB.id });
+      }
+    }
+    const orderA = lA.items.filter((i) => ib.has(i.id)).map((i) => i.id).join(), orderB = lB.items.filter((i) => ia.has(i.id)).map((i) => i.id).join();
+    if (orderA !== orderB && !out.some((c) => c.text.startsWith(lB.name + ":"))) out.push({ kind: "change", text: lB.name + ": reordered components" });
+  }
+  const oa = a.lines.filter((l) => lb.has(l.id)).map((l) => l.id).join(), ob = b.lines.filter((l) => la.has(l.id)).map((l) => l.id).join();
+  if (oa !== ob) out.push({ kind: "change", text: "Reordered lines" });
+  // dedupe stage+at double reports
+  return out.filter((c, i) => out.findIndex((d) => d.text === c.text) === i);
+}
+// Three-way merge: apply the changes made between base and mine onto theirs.
+function mergeStates(base, mine, theirs) {
+  const res = clone(theirs);
+  const lBase = new Map(base.lines.map((l) => [l.id, l])), lMine = new Map(mine.lines.map((l) => [l.id, l]));
+  for (const l of base.lines) if (!lMine.has(l.id)) res.lines = res.lines.filter((x) => x.id !== l.id);
+  mine.lines.forEach((lM, idx) => {
+    const lB = lBase.get(lM.id);
+    let lR = res.lines.find((x) => x.id === lM.id);
+    if (!lB) { if (!lR) res.lines.splice(Math.min(idx, res.lines.length), 0, clone(lM)); return; }
+    if (!lR) return; // they deleted the line; their deletion wins
+    for (const f of LINE_FIELDS) if ((lB[f] || "") !== (lM[f] || "")) lR[f] = lM[f];
+    const iBase = new Map(lB.items.map((i) => [i.id, i])), iMine = new Map(lM.items.map((i) => [i.id, i]));
+    for (const it of lB.items) if (!iMine.has(it.id)) lR.items = lR.items.filter((x) => x.id !== it.id);
+    lM.items.forEach((iM, k) => {
+      const iB = iBase.get(iM.id);
+      if (!iB) {
+        const prev = lM.items[k - 1]; const at = prev ? lR.items.findIndex((x) => x.id === prev.id) : -1;
+        lR.items.splice(at + 1, 0, clone(iM)); return;
+      }
+      const iR = lR.items.find((x) => x.id === iM.id); if (!iR) return;
+      for (const f of ITEM_FIELDS) if (fval(iB, f) !== fval(iM, f)) { if (iM[f] == null) delete iR[f]; else iR[f] = clone(iM[f]); }
+    });
+  });
+  return res;
+}
+
+// ---------- Storage backends ----------
+const TAB = uid("tab");
+let backend = null; // { mode, canWrite, commit(version) }
+let versions = []; // newest first
+let loaded = false;
+let people = {}; // id -> profile
+let userNs = null, myId = null, assetsNs = null;
+let versionFiles = []; // files and links attached to versions: {id, version, kind, name, asset | url, size, ts, author}
+
+function localBackend() {
+  const KEY = "wiringlog-history", FKEY = "wiringlog-versionfiles";
+  let list = lsGet(KEY);
+  if (!Array.isArray(list)) list = [];
+  let files = lsGet(FKEY);
+  if (!Array.isArray(files)) files = [];
+  const saveFiles = () => { lsSet(FKEY, files); versionFiles = files.slice(); render(); };
+  return {
+    mode: "local", canWrite: true,
+    start(cb) { versionFiles = files.slice(); cb(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]); },
+    async addFile(f) { files.push(f); saveFiles(); },
+    async updateFile(id, patch) { files = files.map((f) => (f.id === id ? { ...f, ...patch } : f)); saveFiles(); },
+    async removeFile(id) { files = files.filter((f) => f.id !== id); saveFiles(); },
+    replaceFiles(arr) { files = arr; saveFiles(); },
+    async commit(v) {
+      const headN = Math.max(1, ...list.map((x) => x.n));
+      if (v.n !== headN + 1) return { conflict: true };
+      if (!list.length) list.push(stored(baselineVersion()));
+      list.push(v); lsSet(KEY, list); this.start(onVersions); return { ok: true };
+    },
+    replaceAll(arr) { list = arr; lsSet(KEY, list); this.start(onVersions); },
+  };
+}
+function sharedBackend(db, canWrite) {
+  const col = db.collection("history"), fcol = db.collection("versionFiles");
+  return {
+    mode: "shared", canWrite,
+    addFile: (f) => fcol.doc(f.id).set(f),
+    updateFile: (id, patch) => fcol.doc(id).update(patch),
+    removeFile: (id) => fcol.doc(id).delete(),
+    start(cb) {
+      fcol.limit(1000).onSnapshot((snap) => { versionFiles = snap.docs.map((d) => d.data()); render(); }, () => {});
+      col.orderBy("n", "desc").limit(1000).onSnapshot(
+        (snap) => { if (snap.empty && snap.metadata.fromCache) return; cb(snap.empty ? [baselineVersion()] : snap.docs.map((d) => d.data())); },
+        (e) => { setStatus("error", "Live sync stopped (" + e.code + "). Reload the page."); }
+      );
+    },
+    async commit(v) {
+      const lock = db.doc("meta/lock");
+      let got = await lock.acquire({ holder: TAB, ttlMs: 15000 });
+      if (!got.acquired) { await new Promise((r) => setTimeout(r, 1500 + Math.random() * 1000)); got = await lock.acquire({ holder: TAB, ttlMs: 15000 }); }
+      if (!got.acquired) return { busy: true };
+      const latest = await col.orderBy("n", "desc").limit(1).get();
+      const headN = latest.empty ? 1 : latest.docs[0].data().n;
+      if (v.n !== headN + 1) return { conflict: true };
+      const path = (n) => "history/v" + String(n).padStart(5, "0");
+      if (latest.empty) await db.doc(path(1)).set(stored(baselineVersion()));
+      await db.doc(path(v.n)).set(v);
+      return { ok: true };
+    },
+  };
+}
+
+// ---------- GitHub backend ----------
+// The log lives in data/log.json in the public repo, as {versions, versionFiles}. Anyone can read it. Saving needs a
+// GitHub token with write access to the repo, kept in this browser only; each save is a commit.
+const GH = { owner: "SchusterLab", repo: "kiutra-wiring-log", branch: "main", file: "data/log.json" };
+const GH_API = "https://api.github.com/repos/" + GH.owner + "/" + GH.repo;
+const TOKEN_KEY = "wiringlog-gh-token";
+let ghToken = (() => { try { return localStorage.getItem(TOKEN_KEY) || null; } catch { return null; } })();
+const ghHeaders = (extra) => ({ Accept: "application/vnd.github+json", ...(ghToken ? { Authorization: "Bearer " + ghToken } : {}), ...(extra || {}) });
+const b64 = (bytes) => { let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); };
+const ghRaw = () => fetch(GH_API + "/contents/" + GH.file + "?ref=" + GH.branch + "&t=" + Date.now(), { headers: ghHeaders({ Accept: "application/vnd.github.raw+json" }), cache: "no-store" });
+async function ghRead() {
+  // On the published site, read through the API, so a save shows at once; the site's own copy updates a minute or so later.
+  if (location.hostname.endsWith("github.io")) {
+    try { const r = await ghRaw(); if (r.ok) return await r.json(); } catch {}
+  }
+  const r = await fetch(GH.file + "?t=" + Date.now(), { cache: "no-store" });
+  if (!r.ok) throw new Error("log " + r.status);
+  return r.json();
+}
+async function ghSha(path) {
+  const dir = path.split("/").slice(0, -1).join("/");
+  const r = await fetch(GH_API + "/contents/" + dir + "?ref=" + GH.branch + "&t=" + Date.now(), { headers: ghHeaders(), cache: "no-store" });
+  if (!r.ok) throw new Error("GitHub " + r.status);
+  const f = (await r.json()).find((x) => x.path === path);
+  return f ? f.sha : null;
+}
+async function ghPut(path, base64, message, sha) {
+  const r = await fetch(GH_API + "/contents/" + path.split("/").map(encodeURIComponent).join("/"), {
+    method: "PUT", headers: ghHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ message, content: base64, branch: GH.branch, ...(sha ? { sha } : {}) }) });
+  if (r.status === 409 || r.status === 422) return { conflict: true };
+  if (!r.ok) throw new Error(r.status === 401 ? "GitHub refused the token; sign in again" : r.status === 403 || r.status === 404 ? "this GitHub token cannot write to " + GH.owner + "/" + GH.repo : "GitHub " + r.status);
+  return { ok: true };
+}
+// Read the log, change it with fn, and write it back; retried when someone else wrote in between.
+async function ghUpdateLog(message, fn) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const sha = await ghSha(GH.file);
+    const r = await ghRaw();
+    if (!r.ok) throw new Error("GitHub " + r.status);
+    const log = await r.json();
+    const res = fn(log);
+    if (res && res.abort) return res.abort;
+    const out = await ghPut(GH.file, b64(new TextEncoder().encode(JSON.stringify(log, null, 1) + "\n")), message, sha);
+    if (out.ok) return { ok: true, log };
+  }
+  return { busy: true };
+}
+function githubBackend() {
+  let last = "", cb0 = null, lastPoll = 0;
+  const apply = (log) => {
+    const s = JSON.stringify(log); if (s === last) return; last = s;
+    versionFiles = Array.isArray(log.versionFiles) ? log.versionFiles : [];
+    const list = Array.isArray(log.versions) ? log.versions : [];
+    cb0(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]);
+  };
+  const poll = async () => {
+    lastPoll = Date.now();
+    try { apply(await ghRead()); } catch { if (!loaded) { loaded = true; versions = []; render(); } }
+  };
+  const fileOp = async (message, fn) => {
+    const r = await ghUpdateLog(message, (log) => { log.versionFiles = fn(Array.isArray(log.versionFiles) ? log.versionFiles : []); });
+    if (!r.ok) throw new Error("someone else is saving; try again");
+    apply(r.log);
+  };
+  return {
+    mode: "github", canWrite: !!ghToken,
+    start(cb) {
+      cb0 = cb; poll();
+      setInterval(() => { if (document.visibilityState === "visible") poll(); }, 180000);
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - lastPoll > 30000) poll(); });
+    },
+    addFile: (f) => fileOp("Attach " + (f.name || "a file") + " to version " + f.version, (L) => [...L, f]),
+    updateFile: (id, patch) => fileOp("Rename a version file", (L) => L.map((f) => (f.id === id ? { ...f, ...patch } : f))),
+    removeFile: (id) => fileOp("Remove a version file", (L) => L.filter((f) => f.id !== id)),
+    async commit(v) {
+      const r = await ghUpdateLog("Version " + v.n + ": " + v.message, (log) => {
+        const list = Array.isArray(log.versions) ? log.versions : (log.versions = []);
+        const headN = Math.max(1, ...list.map((x) => x.n));
+        if (v.n !== headN + 1) return { abort: { conflict: true } };
+        if (!list.length) list.push(stored(baselineVersion()));
+        list.push(v);
+      });
+      if (r.ok) { apply(r.log); return { ok: true }; }
+      return r;
+    },
+  };
+}
+// Uploads go into files/uploads/ in the repo. The site serves a new file a minute or so after the upload.
+const ghAssets = {
+  async upload(f) {
+    if (f.size > 20 * 1048576) throw { code: "too_large" };
+    const path = "files/uploads/" + new Date().toISOString().slice(0, 10) + "-" + uid("") + "-" + f.name.replace(/[^\w.\-]+/g, "_");
+    const r = await ghPut(path, b64(new Uint8Array(await f.arrayBuffer())), "Upload " + f.name, null);
+    if (!r.ok) throw { code: "failed" };
+    return { id: path, sizeBytes: f.size };
+  },
+};
+function ghSignIn() {
+  viewerToken++;
+  $("#viewer-title").textContent = "Sign in to edit";
+  $("#viewer-save").hidden = true;
+  const tok = h("input", { id: "f-gh-token", type: "password", autocomplete: "off", placeholder: "github_pat_…", "aria-label": "GitHub token",
+    style: "width:100%;padding:6px 8px;border:1px solid var(--rule);border-radius:5px;background:var(--surface)" });
+  const go = h("button", { class: "btn primary", onclick: async () => {
+    const t = tok.value.trim(); if (!t) { tok.focus(); return; }
+    go.disabled = true; go.textContent = "Checking…";
+    try {
+      const r = await fetch(GH_API, { headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + t } });
+      const j = r.ok ? await r.json() : null;
+      if (!j || !(j.permissions && j.permissions.push)) throw new Error(r.status === 401 ? "GitHub refused this token." : "This token cannot write to " + GH.owner + "/" + GH.repo + ".");
+      localStorage.setItem(TOKEN_KEY, t); location.reload();
+    } catch (e) { toast(e.message || "Could not check the token"); go.disabled = false; go.textContent = "Sign in"; }
+  } }, "Sign in");
+  tok.addEventListener("keydown", (e) => { if (e.key === "Enter") go.click(); });
+  const repo = GH.owner + "/" + GH.repo;
+  $("#viewer-body").replaceChildren(h("div", { class: "linkbox" },
+    h("p", {}, "Saving needs a GitHub account with write access to ", h("a", { href: "https://github.com/" + repo, target: "_blank", rel: "noopener", style: "color:var(--accent)" }, repo),
+      ". Paste a personal access token below. It stays in this browser only, so use Sign out on a shared computer."),
+    h("p", {}, "To make a token: GitHub, Settings, Developer settings, Fine-grained tokens, Generate new token. Set Resource owner to " + GH.owner +
+      ", Repository access to only " + GH.repo + ", and Contents to Read and write."),
+    tok, h("div", { class: "actions" }, go)));
+  $("#viewer").hidden = false; tok.focus();
+}
+function ghSignOut() { try { localStorage.removeItem(TOKEN_KEY); } catch {} location.reload(); }
+
+// ---------- App state ----------
+let view = "diagram";
+let group = lsGet("wiringlog-group") || "all";
+let editMode = false;
+let viewingN = null; // version number shown read-only
+let attachOpen = null; // version number whose attach box is open in History
+let selection = null; // {kind:'item', line, item} | {kind:'line', line} | {kind:'save'}
+let draft = lsGet("wiringlog-draft2"); // {base, baseState, state, message, notes}
+const head = () => versions[0] || null;
+function shownState() {
+  if (viewingN != null) { const v = versions.find((x) => x.n === viewingN); if (v) return v.state; }
+  if (draft) return draft.state;
+  return head() ? head().state : null;
+}
+function pendingChanges() { return draft ? diffStates(draft.baseState, draft.state) : []; }
+function persistDraft() {
+  if (draft && !pendingChanges().length && !draft.message) draft = null;
+  lsSet("wiringlog-draft2", draft);
+}
+function mutate(fn) {
+  if (!backend || !backend.canWrite || !head()) return;
+  if (!draft) draft = { base: head().n, baseState: clone(head().state), state: clone(head().state), message: "", notes: "" };
+  fn(draft.state);
+  persistDraft();
+  render();
+}
+function onVersions(list) {
+  versions = list; loaded = true;
+  if (draft && !versions.some((v) => v.n === draft.base) && versions.length) { /* base vanished: keep draft, merge prompt will show */ }
+  resolvePeople();
+  render();
+}
+async function resolvePeople() {
+  if (backend && backend.mode === "github") {
+    for (const id of new Set(versions.map((v) => v.author).filter(Boolean))) people[id] = people[id] || { name: id, avatarUrl: "https://github.com/" + encodeURIComponent(id) + ".png?size=40" };
+    return;
+  }
+  if (!userNs) return;
+  const ids = [...new Set(versions.map((v) => v.author).filter(Boolean))];
+  if (!ids.length) return;
+  people = await userNs.profiles(ids);
+  render();
+}
+function authorEl(v) {
+  if (!v.author) return h("span", {}, v.authorNote || (backend && backend.mode === "local" ? "this browser" : "imported"));
+  const p = people[v.author];
+  return h("span", { style: "display:inline-flex;align-items:center;gap:6px" }, p ? h("img", { src: p.avatarUrl, alt: "" }) : null, (p && p.name) || "Someone");
+}
+
+// ---------- Rendering ----------
+function setStatus(kind, text) {
+  const s = $("#status"); s.replaceChildren();
+  s.append(h("span", { class: "pill" }, h("span", { class: "dot" + (kind === "live" ? " live" : "") }), text));
+  if (head()) s.append(h("span", { class: "pill" }, "Current: version " + head().n + " · " + fmtDate(head().ts)));
+}
+function render() {
+  if (!backend) return;
+  if (backend.mode === "github") setStatus("live", backend.canWrite ? "Signed in as " + (myId || "a GitHub user") : "Public · read-only");
+  else setStatus(backend.mode === "shared" ? "live" : "local", backend.mode === "shared" ? "Shared · live" : "Saved in this browser only");
+  $("#tab-diagram").setAttribute("aria-pressed", view === "diagram");
+  $("#tab-history").setAttribute("aria-pressed", view === "history");
+  $("#groupseg").hidden = view !== "diagram";
+  // Built once, so a re-render never takes the focus out of the frequency box.
+  const nb = $("#noisebar"); nb.hidden = view !== "diagram"; if (!nb.firstChild) nb.append(...renderNoiseBar());
+  for (const b of $("#groupseg").children) b.setAttribute("aria-pressed", b.dataset.g === group);
+  $("#importlbl").hidden = backend.mode !== "local";
+  const st = shownState();
+  const shownN = viewingN != null ? viewingN : head() ? head().n : null;
+  const shownFiles = shownN != null ? filesOf(shownN) : [];
+  $("#footsrc").replaceChildren(st ? "Source drawings: " + (st.meta.sources || "") : "",
+    shownFiles.length ? h("span", { class: "vfiles" }, "Files for version " + shownN + ": ",
+      ...shownFiles.flatMap((f, k) => [k ? " · " : "", fileLink(f, attName(f))])) : null);
+  renderActions(); renderBanners();
+  const main = $("#main"); main.replaceChildren();
+  if (!loaded) { main.append(h("div", { class: "empty" }, "Loading the wiring record…")); return; }
+  if (!head()) { main.append(renderEmpty()); return; }
+  if (view === "history") { main.append(renderHistory()); return; }
+  const panel = renderPanel(st);
+  const wrap = h("div", { class: "layout" }, h("div", { style: "min-width:0" }, renderDiagram(st), renderLegend()), panel);
+  main.append(wrap);
+}
+function renderActions() {
+  const a = $("#topactions"); a.replaceChildren();
+  if (view !== "diagram" || !head()) return;
+  a.append(h("button", { class: "btn", onclick: exportDiagramImage, title: "Save the diagram as shown (selected lines, this version) as a PNG" }, "Export image"));
+  if (viewingN != null) return;
+  if (backend.canWrite) {
+    a.append(h("button", { class: "btn", "aria-pressed": editMode, onclick: () => { editMode = !editMode; if (!editMode && selection && selection.kind !== "save") selection = null; render(); } }, editMode ? "Done editing" : "Edit"));
+    if (editMode) a.append(h("button", { class: "btn", onclick: addLine }, "Add line"));
+    const n = pendingChanges().length;
+    a.append(h("button", { class: "btn primary", disabled: !n, onclick: () => { selection = { kind: "save" }; render(); } }, n ? "Review & save (" + n + ")" : "No unsaved changes"));
+  }
+  if (backend.mode === "github") a.append(h("button", { class: "btn", onclick: backend.canWrite ? ghSignOut : ghSignIn }, backend.canWrite ? "Sign out" : "Sign in to edit"));
+}
+function renderBanners() {
+  const b = $("#banners"); b.replaceChildren();
+  if (!head()) return;
+  if (viewingN != null) {
+    const v = versions.find((x) => x.n === viewingN);
+    b.append(h("div", { class: "banner info" },
+      h("span", {}, h("strong", {}, "Viewing version " + viewingN), " · " + (v ? v.message : "") + " · read-only"),
+      h("span", { class: "actions" },
+        backend.canWrite && viewingN !== head().n ? h("button", { class: "btn", onclick: () => restore(viewingN) }, "Restore this version") : null,
+        h("button", { class: "btn primary", onclick: () => { viewingN = null; render(); } }, "Back to current"))));
+  }
+  if (draft && draft.base !== head().n) {
+    b.append(h("div", { class: "banner" },
+      h("span", {}, "Version " + head().n + " was saved after you started editing (your edits are based on version " + draft.base + ")."),
+      h("span", { class: "actions" },
+        h("button", { class: "btn", onclick: mergeDraft }, "Apply my edits on top of version " + head().n),
+        h("button", { class: "btn danger", onclick: discardDraft }, "Discard my edits"))));
+  } else if (draft && pendingChanges().length && viewingN == null) {
+    b.append(h("div", { class: "banner info" },
+      h("span", {}, pendingChanges().length + " unsaved change" + (pendingChanges().length > 1 ? "s" : "") + ". Others see version " + head().n + " until you save."),
+      h("span", { class: "actions" },
+        h("button", { class: "btn danger", onclick: discardDraft }, "Discard"),
+        h("button", { class: "btn primary", onclick: () => { selection = { kind: "save" }; render(); } }, "Review & save"))));
+  }
+}
+function renderEmpty() {
+  return h("div", { class: "empty" },
+    h("p", {}, "The wiring record could not be loaded."),
+    h("p", {}, "Reload the page to try again."));
+}
+// A coax line counts as superconducting (an output line) when any of its cables is NbTi, by label or detail.
+const isSuperconducting = (l) => l.group === "rf" && l.items.some((i) => i.type === "cable" && /nbti/i.test((i.label || "") + " " + (i.detail || "")));
+function renderDiagram(st) {
+  const lines = st.lines.filter((l) => group === "all" || l.group === group);
+  const changed = new Set(viewingN == null && draft ? pendingChanges().map((c) => c.item).filter(Boolean) : []);
+  const g = h("div", { class: "diagram", style: "grid-template-columns: 84px " + (lines.map((l) => (l.group === "dc" ? "minmax(150px, 1.3fr)" : "minmax(128px, 1fr)")).join(" ") || "1fr") });
+  const nStages = st.stages.length;
+  const incoming = incomingLinks(st);
+  const noise = noisePhotons(st, noiseFreqGHz);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "links"); svg.setAttribute("aria-hidden", "true");
+  g.append(svg);
+  const rowOf = (si, at) => 2 + si * 2 + (at === "plate" ? 0 : 1);
+  const totalRows = 1 + nStages * 2;
+  // stage bands, coldest darkest
+  st.stages.forEach((s, si) => {
+    const pct = Math.round(4 + (si / Math.max(nStages - 1, 1)) * 34);
+    g.append(h("div", { class: "band", style: "grid-row:" + rowOf(si, "plate") + " / span " + (si === nStages - 1 ? 3 : 2) + "; background: color-mix(in srgb, var(--cold) " + pct + "%, var(--surface))" }));
+    g.append(h("div", { class: "stage-label", style: "grid-row:" + rowOf(si, "plate") + " / span 2" }, h("div", { class: "t" }, s.name), h("div", { class: "s", "data-ssub": s.id }, stageSub(s)),
+      // The 4 K shield and the puck hold no attenuators, so their n would only repeat the 4 K plate's and the sample stage's.
+      stageTemp(s) && s.id !== "sh4" && s.id !== "puck" ? h("div", { class: "s nstage", "data-nstage": s.id, title: "Thermal photon occupation n_BE at this stage's temperature, at " + noiseFreqGHz + " GHz" }, h("i", {}, "n"), " = " + fmtN(nBE(noiseFreqGHz * 1e9, stageT(s)))) : null));
+    g.append(h("div", { class: "plate-bar" + (s.id === "sh4" ? " thin" : ""), style: "grid-row:" + rowOf(si, "plate") }));
+  });
+  g.append(h("div", { class: "lhead", style: "grid-row:1;grid-column:1;text-align:left" }, h("div", { class: "eyebrow" }, "Stage"), h("div", { class: "p" }, lines.length + " line" + (lines.length === 1 ? "" : "s"))));
+  g.append(h("div", { class: "lhead lfoot", style: "grid-row:" + (totalRows + 1) + ";grid-column:1" }));
+  lines.forEach((l, li) => {
+    const col = 2 + li;
+    const rowIdx = (i) => st.stages.findIndex((s) => s.id === i.stage) * 2 + (i.at === "plate" ? 0 : 1);
+    // A line that feeds into another line's part ends there; anything below it is left unconnected.
+    const feed = l.items.find((i) => i.link && findItem(st, i.link.line, i.link.item));
+    const lastStage = feed ? rowIdx(feed) : Math.max(0, ...l.items.map(rowIdx));
+    g.append(h("div", { class: "lane " + l.group + (isSuperconducting(l) ? " sc" : ""), "data-lane": l.id, style: "grid-column:" + col + ";grid-row: 2 / " + (2 + lastStage + 1) }));
+    const att = attenuation(l);
+    const sel = selection && selection.kind === "line" && selection.line === l.id;
+    g.append(h("div", { class: "lhead" + (sel ? " sel" : ""), style: "grid-row:1;grid-column:" + col },
+      h("button", { onclick: () => { selection = { kind: "line", line: l.id }; render(); }, title: "Line details" },
+        h("div", { class: "n" }, l.name),
+        att != null ? h("div", { class: "att", title: "Total gain: amplifier gain minus attenuation" }, (att > 0 ? "−" + att : att < 0 ? "+" + -att : "0") + " dB total") : null,
+        l.purpose ? h("div", { class: "p" }, l.purpose) : null)));
+    g.append(h("div", { class: "lhead lfoot" + (sel ? " sel" : ""), style: "grid-row:" + (totalRows + 1) + ";grid-column:" + col },
+      h("button", { onclick: () => { selection = { kind: "line", line: l.id }; render(); }, title: "Line details" },
+        // A puck port below the point where its line leaves into another line's part carries nothing.
+        h("div", { class: "n" }, l.name),
+        feed && l.items.some((i) => i.stage === "puck" && rowIdx(i) > rowIdx(feed)) ? h("div", { class: "dnu" }, "DO NOT USE") : null)));
+    st.stages.forEach((s, si) => {
+      for (const at of ["plate", "region"]) {
+        if (s.id === "puck" && at === "region" && !l.items.some((i) => i.stage === "puck" && i.at === "region") && !editMode) continue;
+        const cell = h("div", { class: "cell" + (at === "region" ? " region" : ""), style: "grid-column:" + col + ";grid-row:" + rowOf(si, at) });
+        l.items.filter((i) => i.stage === s.id && i.at === at).forEach((it) => {
+          const isSel = selection && selection.kind === "item" && selection.item === it.id;
+          const outT = it.link ? findItem(st, it.link.line, it.link.item) : null;
+          const ins = incoming.get(it.id) || [];
+          const dnu = feed && it.stage === "puck" && rowIdx(it) > rowIdx(feed);
+          // Port 3 faces the first line feeding the part, left unless that line sits to the right.
+          const stack = stackSymbol(it, ins.length && lines.findIndex((x) => x.id === ins[0].line.id) > li ? "right" : "left");
+          const chip = (h("button", { class: "chip " + it.type + (stack ? " stacked" : "") + (dnu ? " dnu" : "") + (isSel ? " sel" : "") + (changed.has(it.id) ? " changed" : ""), "data-item": it.id, title: (TYPES[it.type] || it.type) + (it.note ? " · " + it.note : ""), onclick: () => { selection = { kind: "item", line: l.id, item: it.id }; render(); } },
+            it.type === "anchor" || it.type === "connector" ? null : stack || glyph(it.type), h("span", { class: "l" }, it.label || "(unnamed)"), it.detail ? h("span", { class: "d" }, it.detail) : null,
+            outT ? h("span", { class: "d link" }, "→ " + outT.line.name + (it.link.port ? " · " + it.link.port : "")) : null,
+            ins.length ? h("span", { class: "d link" }, ins.map((x) => "← " + x.line.name + (x.port ? " · " + x.port : "")).join(", ")) : null,
+            it.attachments && it.attachments.length ? h("span", { class: "d clip" }, glyph("clip"), it.attachments.length === 1 ? "1 file" : it.attachments.length + " files") : null));
+          // The n value hangs below the attenuator without taking space, so the chip stays centred on its plate.
+          cell.append(it.type === "attenuator" && noise.has(it.id)
+            ? h("div", { class: "nwrap" }, chip, h("div", { class: "nphot", "data-nitem": it.id, title: "Noise photon occupation at " + noiseFreqGHz + " GHz" }, h("i", {}, "n"), " = " + fmtN(noise.get(it.id))))
+            : chip);
+        });
+        if (editMode && viewingN == null) cell.append(h("button", { class: "add", onclick: () => addItem(l.id, s.id, at), "aria-label": "Add component to " + l.name + " at " + s.name + " " + s.sub + (at === "plate" ? "" : " (below plate)") }, at === "plate" ? "+ on plate" : "+ add"));
+        g.append(cell);
+      }
+    });
+  });
+  g.style.gridTemplateRows = "auto repeat(" + totalRows + ", auto)";
+  // A 100px probe gives the zoom factor between screen pixels and the diagram's own pixels.
+  const probe = h("div", { "aria-hidden": "true", style: "position:absolute;left:0;top:0;width:100px;height:0;visibility:hidden" });
+  g.append(probe);
+  const sizer = h("div", { class: "zoom-sizer" }, g);
+  const scroll = h("div", { class: "scroll", onscroll: () => { diagramScrollLeft = scroll.scrollLeft; diagramScrollTop = scroll.scrollTop; showIndicators(); } }, sizer);
+  const sbx = h("div", { class: "sb x", "aria-hidden": "true" }), sby = h("div", { class: "sb y", "aria-hidden": "true" });
+  attachPinch(scroll);
+  // Re-lay out when the container width changes (window resize, or the page scrollbar coming and going while zooming).
+  if (diagramResize) diagramResize.disconnect();
+  let lastW = -1;
+  // The box is as wide as the diagram, so the column it sits in, not the box, sets the unzoomed layout width.
+  const wrap = h("div", { class: "scroll-wrap" }, scroll, sbx, sby);
+  diagramResize = new ResizeObserver(() => { if (wrap.clientWidth !== lastW) { lastW = wrap.clientWidth; requestAnimationFrame(layoutDiagram); } });
+  diagramResize.observe(wrap);
+  lastDiagram = { g, svg, st, lines, probe, scroll, sizer, sbx, sby, wrap };
+  requestAnimationFrame(() => { layoutDiagram(); scroll.scrollLeft = diagramScrollLeft; scroll.scrollTop = diagramScrollTop; });
+  return wrap;
+}
+// ---------- Zoom (pinch on touch screens, Ctrl + scroll on a trackpad or mouse) ----------
+let diagramZoom = 1, diagramScrollLeft = 0, diagramScrollTop = 0, diagramResize = null;
+const ZOOM_MIN = 0.35, ZOOM_MAX = 3;
+// Content point (in diagram pixels) under a screen point, at the current zoom.
+function contentPoint(cx, cy) {
+  const { scroll } = lastDiagram; const r = scroll.getBoundingClientRect();
+  return { x: (scroll.scrollLeft + cx - r.left) / diagramZoom, y: (scroll.scrollTop + cy - r.top) / diagramZoom };
+}
+// The diagram is laid out at the unzoomed width and magnified as a whole, so text, boxes and links scale together.
+// The sizer takes the magnified size so the page and the horizontal scroll see it.
+function applyZoom() {
+  if (!lastDiagram || !lastDiagram.g.isConnected) return;
+  const { g, sizer, wrap } = lastDiagram;
+  g.style.width = wrap.clientWidth - 2 + "px";
+  g.style.transform = diagramZoom === 1 ? "" : "scale(" + diagramZoom + ")";
+  sizer.style.width = g.offsetWidth * diagramZoom + "px";
+  sizer.style.height = g.offsetHeight * diagramZoom + "px";
+  // A width change re-flows the columns, so the links drawn for the old width no longer fit.
+  if (g.offsetWidth !== lastDiagram.drawnW) drawLinks();
+}
+function layoutDiagram() { applyZoom(); drawLinks(); }
+// Zoom to z. The anchor point (p at screen point cx, cy) is kept in the signature for the callers.
+function zoomTo(z, p, cx, cy) {
+  if (!lastDiagram || !lastDiagram.g.isConnected) return;
+  diagramZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
+  if (Math.abs(diagramZoom - 1) < 0.04) diagramZoom = 1;
+  applyZoom();
+  // The box grows with the diagram from its top-left corner; nothing scrolls to hold the point under the fingers,
+  // since scrolling the page during a pinch made the diagram oscillate.
+  showIndicators();
+  updateZoomUI();
+}
+function attachPinch(scroll) {
+  let pinch = null;
+  const mid = (t) => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 });
+  const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1;
+  scroll.addEventListener("touchstart", (e) => {
+    if (e.touches.length !== 2) { pinch = null; return; }
+    // Claim the gesture before the browser starts its own pan or zoom with it.
+    e.preventDefault();
+    const m = mid(e.touches);
+    pinch = { d0: dist(e.touches), z0: diagramZoom, p: contentPoint(m.x, m.y) };
+  }, { passive: false });
+  scroll.addEventListener("touchmove", (e) => {
+    if (!pinch || e.touches.length !== 2) return;
+    e.preventDefault();
+    const m = mid(e.touches);
+    zoomTo(pinch.z0 * dist(e.touches) / pinch.d0, pinch.p, m.x, m.y);
+  }, { passive: false });
+  scroll.addEventListener("touchend", (e) => { if (e.touches.length < 2) pinch = null; });
+  scroll.addEventListener("touchcancel", () => { pinch = null; });
+  // iOS Safari: keep its page zoom from taking over the gesture.
+  scroll.addEventListener("gesturestart", (e) => e.preventDefault());
+  scroll.addEventListener("wheel", (e) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    // About 20% per mouse-wheel notch (deltaY 100 px, or 3 lines); trackpad pinches send small steps and stay smooth.
+    const dy = Math.max(-100, Math.min(100, e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1)));
+    zoomTo(diagramZoom * Math.exp(-dy * 0.0018), contentPoint(e.clientX, e.clientY), e.clientX, e.clientY);
+  }, { passive: false });
+}
+// Size and place the drawn scroll indicators from the box's scroll state, then fade them out like native ones.
+function showIndicators() {
+  if (!lastDiagram) return;
+  const { scroll: sc, sbx, sby } = lastDiagram;
+  const place = (bar, view, full, pos, start, sizeProp, posProp) => {
+    if (full <= view + 1) { bar.hidden = true; return; }
+    const track = view - 10, len = Math.max(24, track * view / full);
+    bar.hidden = false;
+    bar.style[sizeProp] = len + "px";
+    bar.style[posProp] = start + 3 + (track - len) * Math.min(1, Math.max(0, pos / (full - view))) + "px";
+  };
+  place(sbx, sc.clientWidth, sc.scrollWidth, sc.scrollLeft, sc.clientLeft, "width", "left");
+  place(sby, sc.clientHeight, sc.scrollHeight, sc.scrollTop, sc.clientTop, "height", "top");
+  sbx.classList.add("on"); sby.classList.add("on");
+  clearTimeout(showIndicators._t);
+  showIndicators._t = setTimeout(() => { sbx.classList.remove("on"); sby.classList.remove("on"); }, 700);
+}
+function updateZoomUI() {
+  const b = $("#zoomreset"); if (!b) return;
+  b.hidden = diagramZoom === 1;
+  b.textContent = "Zoom " + Math.round(diagramZoom * 100) + "% · Reset";
+}
+// Curves from a line's last part into the multi-port part it feeds, drawn over the grid once laid out.
+let lastDiagram = null;
+function drawLinks() {
+  if (!lastDiagram || !lastDiagram.g.isConnected) return;
+  const { g, svg, st, lines, probe } = lastDiagram;
+  const NS = "http://www.w3.org/2000/svg";
+  const box = g.getBoundingClientRect();
+  // Work in the diagram's own pixels so the drawing scales with the zoom.
+  const k = probe.getBoundingClientRect().width / 100 || 1;
+  svg.setAttribute("width", box.width / k); svg.setAttribute("height", box.height / k);
+  lastDiagram.drawnW = g.offsetWidth;
+  svg.replaceChildren();
+  const shown = new Set(lines.map((l) => l.id));
+  const rel = (el) => { const r = el.getBoundingClientRect(); return { l: (r.left - box.left) / k, r: (r.right - box.left) / k, t: (r.top - box.top) / k, b: (r.bottom - box.top) / k }; };
+  for (const l of lines) for (const it of l.items) {
+    if (!it.link || !shown.has(it.link.line)) continue;
+    const a = g.querySelector('[data-item="' + CSS.escape(it.id) + '"]'), b = g.querySelector('[data-item="' + CSS.escape(it.link.item) + '"]');
+    if (!a || !b) continue;
+    const A = rel(a), B = rel(b);
+    const right = B.l > (A.l + A.r) / 2;
+    const x1 = right ? A.r : A.l, y1 = (A.t + A.b) / 2;
+    // A part drawn with its ports takes the curve at the named port itself.
+    const pe = it.link.port ? b.querySelector('[data-port="' + CSS.escape(it.link.port.toLowerCase()) + '"]') : null;
+    const P = pe ? rel(pe) : null;
+    const x2 = P ? (P.l + P.r) / 2 : right ? B.l : B.r, y2 = P ? (P.t + P.b) / 2 : (B.t + B.b) / 2;
+    // Straight segments: out to the column edge, along the edge, then into the part, so no box is crossed.
+    const lane = g.querySelector('[data-lane="' + CSS.escape(l.id) + '"]');
+    const Lr = lane ? rel(lane) : null;
+    const xb = Lr ? (right ? Lr.r : Lr.l) : (x1 + x2) / 2;
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", "M" + x1 + " " + y1 + " H" + xb + " V" + y2 + " H" + x2);
+    // The feeding line's lane stops at the part that leaves it.
+    if (lane) { lane.style.alignSelf = "start"; lane.style.height = Math.max(0, y1 - Lr.t) + "px"; }
+    svg.append(p);
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("cx", x2); c.setAttribute("cy", y2); c.setAttribute("r", 3.5);
+    svg.append(c);
+  }
+}
+window.addEventListener("resize", () => requestAnimationFrame(layoutDiagram));
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => requestAnimationFrame(layoutDiagram));
+function renderLegend() {
+  const reset = h("button", { class: "btn small", id: "zoomreset", hidden: diagramZoom === 1, onclick: () => { diagramZoom = 1; diagramScrollLeft = diagramScrollTop = 0; render(); } }, "Zoom " + Math.round(diagramZoom * 100) + "% · Reset");
+  return h("div", { class: "legend" }, reset, ...Object.entries(TYPES).filter(([k]) => k !== "connector").map(([k, v]) => h("span", {}, glyph(k), v)),
+    h("span", {}, "Brown striped lane: DC loom; thin grey lane: coax line without superconducting cable (inputs); thick purple lane: coax line with NbTi superconducting cable (outputs); curve: line feeding a port of a multi-port part"),
+    h("span", {}, "Pinch, or Ctrl + scroll, to zoom the diagram"));
+}
+function field(label, input) { return h("div", { class: "field" }, h("label", { for: input.id }, label), input); }
+function renderPanel(st) {
+  if (!selection) return null;
+  const close = h("button", { class: "btn small", onclick: () => { selection = null; render(); } }, "Close");
+  const editable = editMode && viewingN == null && backend.canWrite;
+  if (selection.kind === "save") return renderSavePanel(close);
+  const line = st.lines.find((l) => l.id === selection.line);
+  if (!line) { selection = null; return null; }
+  if (selection.kind === "line") {
+    if (!editable) return h("aside", { class: "panel" }, h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Line " + line.name), close),
+      h("dl", { class: "ro" }, h("dt", {}, "Type"), h("dd", {}, line.group === "dc" ? "DC loom" : "RF coax"), h("dt", {}, "Purpose"), h("dd", {}, line.purpose || "—"), h("dt", {}, "Notes"), h("dd", {}, line.note || "—"), h("dt", {}, "Components"), h("dd", {}, String(line.items.length))),
+      backend.canWrite && viewingN == null ? h("button", { class: "btn", onclick: () => { editMode = true; render(); } }, "Edit this line") : null);
+    const upd = (f) => (e) => mutate((s) => { s.lines.find((l) => l.id === line.id)[f] = e.target.value; });
+    const idx = st.lines.indexOf(line);
+    return h("aside", { class: "panel" },
+      h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Edit line"), close),
+      field("Name", h("input", { id: "f-lname", value: line.name, onchange: upd("name") })),
+      field("Type", (() => { const s = h("select", { id: "f-lgroup", onchange: upd("group") }, h("option", { value: "dc" }, "DC loom"), h("option", { value: "rf" }, "RF coax")); s.value = line.group; return s; })()),
+      field("Purpose", h("input", { id: "f-lpurpose", value: line.purpose || "", onchange: upd("purpose") })),
+      field("Notes", (() => { const t = h("textarea", { id: "f-lnote", onchange: upd("note") }); t.value = line.note || ""; return t; })()),
+      h("div", { class: "actions" },
+        h("button", { class: "btn", disabled: idx === 0, onclick: () => mutate((s) => { const i = s.lines.findIndex((l) => l.id === line.id); s.lines.splice(i - 1, 0, s.lines.splice(i, 1)[0]); }) }, "← Move left"),
+        h("button", { class: "btn", disabled: idx === st.lines.length - 1, onclick: () => mutate((s) => { const i = s.lines.findIndex((l) => l.id === line.id); s.lines.splice(i + 1, 0, s.lines.splice(i, 1)[0]); }) }, "Move right →"),
+        h("button", { class: "btn", onclick: () => duplicateLine(line.id) }, "Duplicate"),
+        confirmBtn("Delete line", () => { mutate((s) => { const gone = s.lines.find((l) => l.id === line.id); s.lines = s.lines.filter((l) => l.id !== line.id); unlinkTargets(s, new Set(gone.items.map((x) => x.id))); }); selection = null; render(); })));
+  }
+  const it = line.items.find((i) => i.id === selection.item);
+  if (!it) { selection = null; return null; }
+  if (!editable) {
+    return h("aside", { class: "panel" },
+      h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, it.label || "(unnamed)"), close),
+      h("dl", { class: "ro" },
+        h("dt", {}, "Line"), h("dd", {}, line.name), h("dt", {}, "Type"), h("dd", {}, TYPES[it.type] || it.type),
+        h("dt", {}, "Location"), h("dd", {}, stageName(st, it.stage) + (it.at === "plate" ? ", on plate" : ", below plate")),
+        h("dt", {}, "Details"), h("dd", {}, it.detail || "—"), h("dt", {}, "Notes"), h("dd", {}, it.note || "—"),
+        h("dt", {}, "Datasheets and links"), h("dd", {}, it.attachments && it.attachments.length ? attList(it.attachments, null) : "—"),
+        it.link ? [h("dt", {}, "Connects to"), h("dd", {}, linkText(st, it.link))] : null,
+        incomingLinks(st).has(it.id) ? [h("dt", {}, "Fed by"), h("dd", {}, incomingLinks(st).get(it.id).map((x) => x.line.name + (x.port ? " → " + x.port : "")).join("\n"))] : null),
+      h("div", { class: "actions" },
+        backend.canWrite && viewingN == null ? h("button", { class: "btn", onclick: () => { editMode = true; render(); } }, "Edit") : null,
+        h("button", { class: "btn", onclick: () => { selection = { kind: "hist", item: it.id }; view = "history"; render(); } }, "History of this part")));
+  }
+  const upd = (f) => (e) => mutate((s) => { s.lines.find((l) => l.id === line.id).items.find((i) => i.id === it.id)[f] = e.target.value; });
+  const sel = (id, opts, val, f) => { const s = h("select", { id, onchange: upd(f) }, ...opts.map(([v, t]) => h("option", { value: v }, t))); s.value = val; return s; };
+  const ta = (id, val, f) => { const t = h("textarea", { id, onchange: upd(f) }); t.value = val || ""; return t; };
+  const move = (d) => mutate((s) => {
+    const L = s.lines.find((l) => l.id === line.id).items; const i = L.findIndex((x) => x.id === it.id);
+    let j = i + d; while (j >= 0 && j < L.length && !(L[j].stage === it.stage && L[j].at === it.at)) j += d;
+    if (j >= 0 && j < L.length) { const [x] = L.splice(i, 1); L.splice(j, 0, x); }
+  });
+  return h("aside", { class: "panel" },
+    h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Edit component"), close),
+    h("div", { class: "muted" }, "Line " + line.name + ". Changes stay in your draft until you save a version."),
+    field("Type", sel("f-type", Object.entries(TYPES), it.type, "type")),
+    field("Label", h("input", { id: "f-label", value: it.label, onchange: upd("label"), placeholder: "e.g. 20 dB, SMA, 086-SS-SS" })),
+    field("Details (part number, specs)", ta("f-detail", it.detail, "detail")),
+    h("div", { class: "row2" },
+      field("Stage", sel("f-stage", st.stages.map((s) => [s.id, s.name + " " + s.sub]), it.stage, "stage")),
+      field("Position", sel("f-at", [["plate", "On plate"], ["region", "Below plate"]], it.at, "at"))),
+    field("Notes", ta("f-note", it.note, "note")),
+    renderAttachEditor(line, it),
+    renderLinkEditor(st, line, it),
+    h("div", { class: "actions" },
+      h("button", { class: "btn", onclick: () => move(-1) }, "↑ Up"),
+      h("button", { class: "btn", onclick: () => move(1) }, "↓ Down"),
+      confirmBtn("Delete", () => { mutate((s) => { const L = s.lines.find((l) => l.id === line.id); L.items = L.items.filter((x) => x.id !== it.id); unlinkTargets(s, new Set([it.id])); }); selection = null; render(); })));
+}
+// A clickable attachment name. Web links open in a new tab; uploaded files open in the in-page viewer.
+function fileLink(a, text) {
+  if (a.kind !== "file") return h("a", { href: a.url, target: "_blank", rel: "noopener noreferrer", onclick: (e) => { e.preventDefault(); openWebLink(a); } }, text);
+  return h("a", { href: attHref(a), onclick: (e) => { e.preventDefault(); openViewer(a); } }, text);
+}
+let viewerToken = 0, downloadsNs;
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+const loadScript = (src) => new Promise((ok, fail) => { const s = h("script", { src }); s.onload = ok; s.onerror = () => fail(new Error("could not load " + src)); document.head.append(s); });
+let pdfjsReady = null;
+// Both pdf.js scripts load as plain scripts; with the worker code on the page, pdf.js parses on the main thread.
+const loadPdfjs = () => (pdfjsReady = pdfjsReady || loadScript(PDFJS + "pdf.min.js").then(() => loadScript(PDFJS + "pdf.worker.min.js")).then(() => window.pdfjsLib).catch((e) => { pdfjsReady = null; throw e; }));
+// Some views of the page refuse to open other sites from it. Try a new tab first; when that is refused,
+// show the address with a copy button and a plain link instead of failing silently.
+function openWebLink(a) {
+  let w = null;
+  try { w = window.open(a.url, "_blank"); } catch {}
+  if (w) { try { w.opener = null; } catch {} return; }
+  viewerToken++;
+  $("#viewer-title").textContent = attName(a);
+  $("#viewer-save").hidden = true;
+  const addr = h("div", { class: "text", style: "user-select:all" }, a.url);
+  const copy = h("button", { class: "btn primary", onclick: async () => {
+    try { await navigator.clipboard.writeText(a.url); toast("Link copied"); }
+    catch { const r = document.createRange(); r.selectNodeContents(addr); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Press Ctrl+C (⌘C on a Mac) to copy"); }
+  } }, "Copy link");
+  $("#viewer-body").replaceChildren(h("div", { class: "linkbox" },
+    h("p", {}, "This view cannot open other websites. Copy the address and paste it into your browser. To read a PDF here, download it and attach the file instead of the link."),
+    addr,
+    h("div", { class: "actions" }, copy)));
+  $("#viewer").hidden = false;
+  copy.focus();
+}
+function closeViewer() { viewerToken++; $("#viewer").hidden = true; $("#viewer-body").replaceChildren(); }
+async function openViewer(a) {
+  const token = ++viewerToken;
+  const body = $("#viewer-body"), save = $("#viewer-save");
+  $("#viewer-title").textContent = attName(a);
+  body.replaceChildren(h("div", { class: "msg" }, "Loading " + attName(a) + "…"));
+  save.hidden = true;
+  $("#viewer").hidden = false;
+  $("#viewer-close").focus();
+  let blob;
+  try { const r = await fetch(attHref(a)); if (!r.ok) throw new Error(String(r.status)); blob = await r.blob(); }
+  catch { if (token === viewerToken) body.replaceChildren(h("div", { class: "msg" }, "This file could not be loaded. It may have been removed, or it was uploaded by someone outside your organization.")); return; }
+  if (token !== viewerToken) return;
+  const type = blob.type || "";
+  if (downloadsNs === undefined) downloadsNs = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
+  if (downloadsNs) {
+    save.hidden = false;
+    const ext = { "application/pdf": ".pdf", "image/png": ".png", "image/jpeg": ".jpg", "image/gif": ".gif", "image/webp": ".webp", "text/plain": ".txt", "text/csv": ".csv", "text/markdown": ".md", "application/json": ".json" }[type] || "";
+    save.onclick = async () => { try { await downloadsNs.save({ filename: attName(a).replace(/[\\/:*?"<>|]+/g, "-") + ext, data: blob }); } catch (e) { if (e && e.code !== "cancelled" && e.code !== "declined") toast("The copy was not saved"); } };
+  }
+  if (type.startsWith("image/")) { body.replaceChildren(h("img", { src: URL.createObjectURL(blob), alt: attName(a) })); return; }
+  if (type.startsWith("text/") || type === "application/json") { body.replaceChildren(h("div", { class: "text" }, await blob.text())); return; }
+  if (type !== "application/pdf") { body.replaceChildren(h("div", { class: "msg" }, "This file type cannot be shown here. Use Save a copy to open it on your computer.")); return; }
+  try {
+    const lib = await loadPdfjs();
+    const doc = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()), isEvalSupported: false }).promise;
+    if (token !== viewerToken) return;
+    body.replaceChildren();
+    const width = Math.min(body.clientWidth - 24, 940), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    for (let p = 1; p <= doc.numPages; p++) {
+      const page = await doc.getPage(p);
+      if (token !== viewerToken) return;
+      const vp = page.getViewport({ scale: (width / page.getViewport({ scale: 1 }).width) * dpr });
+      const c = h("canvas", { width: Math.floor(vp.width), height: Math.floor(vp.height), "aria-label": "Page " + p + " of " + doc.numPages });
+      c.style.width = Math.floor(vp.width / dpr) + "px";
+      body.append(c);
+      await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+    }
+  } catch {
+    if (token === viewerToken) body.replaceChildren(h("div", { class: "msg" }, "The PDF viewer did not load. Use Save a copy to open the file on your computer."));
+  }
+}
+// A list of a component's attachments. With `edit` ({rename, remove}) each name is an input and each row has a Remove button.
+function attList(list, edit) {
+  return h("ul", { class: "atts" }, ...list.map((a) => {
+    const icon = h("span", { html: '<svg viewBox="0 0 18 18" aria-hidden="true">' + (a.kind === "file" ? '<path d="M4 1.5h7l3.5 3.5v11.5H4Z"/><path d="M11 1.5V5h3.5M6.5 9h5M6.5 12h5"/>' : '<path d="M7.5 10.5a3 3 0 0 0 4.2 0l3-3a3 3 0 0 0-4.2-4.2L9.4 4.4M10.5 7.5a3 3 0 0 0-4.2 0l-3 3a3 3 0 0 0 4.2 4.2l1.1-1.1"/>') + "</svg>" }).firstChild;
+    const sub = a.kind === "file" ? (a.source ? "Downloaded from " + a.source : "Uploaded file") + (a.size ? " · " + fmtSize(a.size) : "") : a.url;
+    const open = fileLink(a, edit ? "Open" : attName(a));
+    if (!edit) return h("li", {}, icon, h("span", { style: "min-width:0;display:grid" }, open, h("span", { class: "sub", style: "grid-column:1" }, sub)));
+    const name = h("input", { id: "f-att-" + a.id, value: a.name || "", placeholder: a.kind === "file" ? "Name, e.g. Datasheet" : "Name, e.g. Product page", "aria-label": "File name", onchange: (e) => edit.rename(a.id, e.target.value.trim()) });
+    return h("li", {}, icon, h("span", { style: "min-width:0;display:grid;gap:3px" }, name, h("span", { class: "sub", style: "grid-column:1" }, open, " · ", sub)),
+      h("button", { class: "btn small danger", onclick: () => edit.remove(a.id), "aria-label": "Remove " + attName(a) }, "Remove"));
+  }));
+}
+// Attach datasheets (uploaded files) and web links to a component. They go into the draft like any other edit.
+function renderAttachEditor(line, it) {
+  const setAtts = (fn) => mutate((s) => { const me = s.lines.find((q) => q.id === line.id).items.find((q) => q.id === it.id); me.attachments = fn(me.attachments || []); if (!me.attachments.length) delete me.attachments; });
+  const list = it.attachments || [];
+  const edit = {
+    rename: (id, name) => setAtts((L) => L.map((a) => (a.id === id ? { ...a, name } : a))),
+    remove: (id) => setAtts((L) => L.filter((a) => a.id !== id)),
+  };
+  return h("div", { class: "field" },
+    h("label", { for: "f-att-url" }, "Datasheets and links"),
+    list.length ? attList(list, edit) : null,
+    attachForm("f-att", (added) => setAtts((L) => [...L, ...added]), "Upload datasheet", "https://… (datasheet or product page)"));
+}
+// The add box shared by components and versions: a web link with an optional name, and file uploads where this view allows them.
+function attachForm(prefix, onAdd, uploadLabel, urlHint) {
+  const url = h("input", { id: prefix + "-url", type: "url", placeholder: urlHint, "aria-label": "Link address" });
+  const lname = h("input", { id: prefix + "-lname", placeholder: "Name (optional)", "aria-label": "Link name" });
+  const addLink = () => {
+    const u = safeUrl(url.value);
+    if (!u) { toast("Enter a web address that starts with https:// or http://"); url.focus(); return; }
+    onAdd([{ id: uid("a"), kind: "link", name: lname.value.trim(), url: u }]);
+  };
+  url.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addLink(); } });
+  lname.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addLink(); } });
+  const fileIn = h("input", { type: "file", id: prefix + "-file", hidden: true, multiple: true, accept: ".pdf,application/pdf,image/png,image/jpeg,image/gif,image/webp,.txt,.csv,.md,.json" });
+  const fileBtn = h("button", { class: "btn small", onclick: () => fileIn.click() }, uploadLabel);
+  fileIn.addEventListener("change", async () => {
+    const files = [...fileIn.files]; fileIn.value = "";
+    if (!files.length) return;
+    fileBtn.disabled = true; fileBtn.textContent = "Uploading…";
+    const added = [];
+    for (const f of files) {
+      const ext = (f.name.split(".").pop() || "").toLowerCase();
+      const type = { pdf: "application/pdf", txt: "text/plain", csv: "text/csv", md: "text/markdown", json: "application/json", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp" }[ext];
+      try {
+        const r = await assetsNs.upload(f, type ? { type } : undefined);
+        added.push({ id: uid("a"), kind: "file", name: f.name.replace(/\.[^.]+$/, ""), asset: r.id, size: r.sizeBytes });
+      } catch (e) {
+        const code = e && e.code;
+        toast(f.name + ": " + (code === "too_large" ? "larger than 20 MB" : code === "unsupported_type" ? "use a PDF, image or text file" : code === "quota_or_state" ? "the log's file storage is full" : code === "rate_limited" ? "too many uploads, try again shortly" : "upload failed"));
+      }
+    }
+    if (added.length) { onAdd(added); toast(added.length === 1 ? "Attached " + added[0].name : "Attached " + added.length + " files"); }
+    else render();
+  });
+  return h("div", { class: "att-add" },
+      h("div", { class: "row" }, url),
+      h("div", { class: "row" }, lname, h("button", { class: "btn small", onclick: addLink }, "Add link")),
+      assetsNs ? h("div", { class: "row", style: "align-items:center" }, fileBtn, fileIn, h("span", { class: "muted", style: "font-size:12px" }, "PDF, image or text, up to 20 MB")) : h("div", { class: "muted", style: "font-size:12px" }, "File uploads are not available in this view. Add a link instead."));
+}
+// Files and links attached to a version (drawings, photos, measurement reports). Each is its own record, so they can be added after the version is saved.
+const filesOf = (n) => versionFiles.filter((f) => f.version === n).sort((a, b) => (a.ts || "").localeCompare(b.ts || ""));
+function versionFileEdit() {
+  return backend.canWrite ? {
+    rename: (id, name) => backend.updateFile(id, { name }).catch(() => toast("Could not rename the file")),
+    remove: (id) => backend.removeFile(id).catch(() => toast("Could not remove the file")),
+  } : null;
+}
+async function addVersionFiles(n, added) {
+  try { for (const a of added) await backend.addFile({ ...a, version: n, ts: new Date().toISOString(), author: myId || null }); }
+  catch (e) { toast("Could not attach to version " + n + ": " + ((e && (e.message || e.code)) || "unknown error")); }
+}
+// Lets this part's line continue into a port of a multi-port part on another line.
+function renderLinkEditor(st, line, it) {
+  const targets = [];
+  for (const l of st.lines) if (l.id !== line.id) for (const x of l.items) if (MULTIPORT.has(x.type)) targets.push({ l, x });
+  const setLink = (fn) => mutate((s) => { const me = s.lines.find((q) => q.id === line.id).items.find((q) => q.id === it.id); fn(me); });
+  const pick = h("select", { id: "f-link", onchange: (e) => setLink((me) => {
+    if (!e.target.value) { delete me.link; return; }
+    const [lid, iid] = e.target.value.split("|");
+    const tgt = targets.find((t) => t.l.id === lid && t.x.id === iid);
+    const port = me.link && me.link.item === iid ? me.link.port : ((PORT_HINTS[tgt.x.type] || [])[0] || "");
+    me.link = { line: lid, item: iid, port };
+  }) }, h("option", { value: "" }, "Nothing (continues down its own line)"),
+    ...targets.map((t) => h("option", { value: t.l.id + "|" + t.x.id }, t.l.name + " · " + (t.x.label || "(unnamed)") + " (" + (TYPES[t.x.type] || t.x.type).toLowerCase() + ")")));
+  pick.value = it.link ? it.link.line + "|" + it.link.item : "";
+  const tgt = it.link ? findItem(st, it.link.line, it.link.item) : null;
+  const hints = h("datalist", { id: "port-hints" }, ...((tgt && PORT_HINTS[tgt.item.type]) || []).map((p) => h("option", { value: p })));
+  const port = h("input", { id: "f-port", list: "port-hints", value: (it.link && it.link.port) || "", placeholder: "e.g. Input, Coupled, Low band", onchange: (e) => setLink((me) => { if (me.link) me.link.port = e.target.value; }) });
+  const ins = incomingLinks(st).get(it.id) || [];
+  return h("div", { class: "field" },
+    h("label", { for: "f-link" }, "Connects into"),
+    pick,
+    it.link ? h("div", { class: "field" }, h("label", { for: "f-port" }, "Port"), port, hints) : null,
+    targets.length ? null : h("div", { class: "muted" }, "No multi-port parts (circulator, coupler, diplexer, splitter) on other lines yet."),
+    ins.length ? h("div", { class: "muted" }, "Fed by: " + ins.map((x) => x.line.name + (x.port ? " → " + x.port : "")).join(", ")) : null);
+}
+function confirmBtn(label, act) {
+  const b = h("button", { class: "btn danger" }, label);
+  b.addEventListener("click", () => {
+    if (b.dataset.armed) return act();
+    b.dataset.armed = "1"; b.textContent = "Click again to confirm";
+    setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = label; } }, 3000);
+  });
+  return b;
+}
+function renderSavePanel(close) {
+  const ch = pendingChanges();
+  const stale = draft && draft.base !== head().n;
+  const msg = h("input", { id: "f-msg", value: (draft && draft.message) || "", placeholder: "e.g. Swapped RF2 IR filter for a 10 dB attenuator", oninput: (e) => { draft.message = e.target.value; lsSet("wiringlog-draft2", draft); btn.disabled = !e.target.value.trim() || stale || !ch.length; } });
+  const notes = h("textarea", { id: "f-notes", placeholder: "Who did the work, when, cooldown number, measured resistances…", oninput: (e) => { draft.notes = e.target.value; lsSet("wiringlog-draft2", draft); } });
+  notes.value = (draft && draft.notes) || "";
+  const btn = h("button", { class: "btn primary", disabled: !msg.value.trim() || stale || !ch.length, onclick: () => saveVersion(btn) }, "Save as version " + (head().n + 1));
+  const pend = (draft && draft.files) || [];
+  const setPend = (fn) => { if (!draft) return; draft.files = fn(draft.files || []); lsSet("wiringlog-draft2", draft); render(); };
+  return h("aside", { class: "panel" },
+    h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Save a new version"), close),
+    ch.length ? h("ul", { class: "changes" }, ...ch.map((c) => h("li", { class: c.kind }, c.text))) : h("p", { class: "muted" }, "No changes yet."),
+    field("Summary (required)", msg),
+    field("Notes", notes),
+    h("div", { class: "field" },
+      h("label", { for: "f-vatt-url" }, "Files for this version"),
+      pend.length ? attList(pend, { rename: (id, name) => setPend((L) => L.map((a) => (a.id === id ? { ...a, name } : a))), remove: (id) => setPend((L) => L.filter((a) => a.id !== id)) }) : null,
+      attachForm("f-vatt", (added) => setPend((L) => [...L, ...added]), "Upload file", "https://… (drawing, photo album, report)"),
+      h("div", { class: "muted", style: "font-size:12px" }, "Updated drawings, photos of the work, measurement reports. You can also attach files later from History.")),
+    stale ? h("p", { class: "muted" }, "Apply your edits on top of the latest version first (see the banner).") : null,
+    btn);
+}
+function renderHistory() {
+  const wrap = h("div", { class: "history" });
+  const focusItem = selection && selection.kind === "hist" ? selection.item : null;
+  if (focusItem) wrap.append(h("div", { class: "banner info", style: "margin:12px" }, h("span", {}, "Showing only versions that touched one component."), h("button", { class: "btn small", onclick: () => { selection = null; render(); } }, "Show all versions")));
+  versions.forEach((v, i) => {
+    const prev = versions[i + 1];
+    const ch = prev ? diffStates(prev.state, v.state) : [];
+    if (focusItem && !ch.some((c) => c.item === focusItem) && prev) return;
+    wrap.append(h("div", { class: "ver" },
+      h("div", { class: "num" }, "v" + v.n),
+      h("div", { style: "min-width:0;display:grid;gap:2px" },
+        h("div", { class: "msg" }, v.message, " ", i === 0 ? h("span", { class: "cur-tag" }, "Current") : null),
+        h("div", { class: "meta" }, authorEl(v), "·", fmtDate(v.ts), prev ? "· " + ch.length + " change" + (ch.length === 1 ? "" : "s") : "· first version")),
+      h("div", { class: "acts" },
+        h("button", { class: "btn small", onclick: () => { viewingN = i === 0 ? null : v.n; view = "diagram"; selection = null; editMode = false; render(); } }, "View diagram"),
+        backend.canWrite ? h("button", { class: "btn small", "aria-expanded": attachOpen === v.n, onclick: () => { attachOpen = attachOpen === v.n ? null : v.n; render(); } }, attachOpen === v.n ? "Done attaching" : "Attach file") : null,
+        backend.canWrite && i !== 0 ? h("button", { class: "btn small", onclick: () => restore(v.n) }, "Restore") : null),
+      h("div", { class: "body" },
+        v.notes ? h("div", { class: "notes" }, v.notes) : null,
+        filesOf(v.n).length ? attList(filesOf(v.n), attachOpen === v.n ? versionFileEdit() : null) : null,
+        attachOpen === v.n ? attachForm("f-hatt-" + v.n, (added) => addVersionFiles(v.n, added), "Upload file", "https://… (drawing, photo album, report)") : null,
+        ch.length ? h("details", { open: i < 3 || focusItem ? true : null }, h("summary", {}, "Changes from v" + prev.n), h("ul", { class: "changes" }, ...ch.map((c) => h("li", { class: c.kind }, c.text)))) : null)));
+  });
+  return wrap;
+}
+
+// ---------- Actions ----------
+function addItem(lineId, stage, at) {
+  const id = uid("i");
+  mutate((s) => {
+    const L = s.lines.find((l) => l.id === lineId).items;
+    const order = (x) => s.stages.findIndex((q) => q.id === x.stage) * 2 + (x.at === "plate" ? 0 : 1);
+    const target = s.stages.findIndex((q) => q.id === stage) * 2 + (at === "plate" ? 0 : 1);
+    let pos = L.length; for (let k = 0; k < L.length; k++) if (order(L[k]) > target) { pos = k; break; }
+    L.splice(pos, 0, { id, type: at === "plate" ? "attenuator" : "cable", stage, at, label: "", detail: "", note: "" });
+  });
+  selection = { kind: "item", line: lineId, item: id }; render();
+  setTimeout(() => { const f = $("#f-type"); if (f) f.focus(); }, 0);
+}
+function addLine() {
+  const id = uid("L");
+  mutate((s) => { s.lines.push({ id, group: group === "dc" ? "dc" : "rf", name: "New line", purpose: "", note: "", items: [] }); });
+  selection = { kind: "line", line: id }; render();
+}
+function duplicateLine(lineId) {
+  const id = uid("L");
+  mutate((s) => {
+    const i = s.lines.findIndex((l) => l.id === lineId); const c = clone(s.lines[i]);
+    c.id = id; c.name = c.name + " copy"; c.items.forEach((it) => (it.id = uid("i")));
+    s.lines.splice(i + 1, 0, c);
+  });
+  selection = { kind: "line", line: id }; render();
+}
+function discardDraft() { draft = null; persistDraft(); if (selection && selection.kind === "save") selection = null; render(); toast("Draft discarded"); }
+function mergeDraft() {
+  draft.state = mergeStates(draft.baseState, draft.state, head().state);
+  draft.base = head().n; draft.baseState = clone(head().state);
+  persistDraft(); render(); toast("Your edits now sit on top of version " + head().n);
+}
+function restore(n) {
+  const v = versions.find((x) => x.n === n); if (!v) return;
+  draft = { base: head().n, baseState: clone(head().state), state: clone(v.state), message: "Restore version " + n, notes: (draft && draft.notes) || "" };
+  persistDraft(); viewingN = null; view = "diagram"; selection = { kind: "save" }; render();
+}
+async function saveVersion(btn) {
+  btn.disabled = true; btn.textContent = "Saving…";
+  const v = { n: head().n + 1, ts: new Date().toISOString(), author: myId, message: draft.message.trim(), notes: (draft.notes || "").trim(), state: draft.state };
+  let r;
+  try { r = await backend.commit(v); } catch (e) { r = { error: e }; }
+  if (r.ok) {
+    const files = draft.files || [];
+    draft = null; persistDraft(); selection = null; editMode = false; if (backend.mode === "shared") versions = [v, ...versions]; render(); toast("Saved version " + v.n);
+    if (files.length) await addVersionFiles(v.n, files);
+    return;
+  }
+  if (r.conflict) toast("Someone saved a newer version. Apply your edits on top of it, then save.");
+  else if (r.busy) toast("Another save is in progress. Try again in a few seconds.");
+  else toast("Could not save: " + ((r.error && (r.error.message || r.error.code)) || "unknown error"));
+  render();
+}
+async function exportHistory() {
+  const data = JSON.stringify({ exported: new Date().toISOString(), versions: versions.slice().reverse().map(stored), versionFiles }, null, 2);
+  const filename = "wiring-log-v" + (head() ? head().n : 0) + ".json";
+  const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
+  if (dl) { try { await dl.save({ filename, data }); } catch (e) { if (e && e.code !== "cancelled" && e.code !== "declined") toast("Export did not complete"); } return; }
+  if (window.claude) { toast("Export is not available in this view"); return; }
+  const a = h("a", { href: URL.createObjectURL(new Blob([data], { type: "application/json" })), download: filename }); document.body.append(a); a.click(); a.remove();
+}
+// The diagram as a PNG, at 2x and unzoomed, without the edit-mode add buttons.
+// Drawn on a canvas from the laid-out page, so it uses the page's own fonts and line breaks.
+const HTML2CANVAS = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+let html2imgReady = null;
+// The renderer reads only rgb() colours; color-mix() computes to color(srgb …), so those are converted first.
+const MIXED = /color\([^()]*\)|color-mix\((?:[^()]|\([^()]*\))*\)/g;
+const COLOR_PROPS = ["color", "backgroundColor", "borderTopColor", "borderRightColor", "borderBottomColor", "borderLeftColor", "outlineColor", "textDecorationColor", "boxShadow", "backgroundImage"];
+function plainColors(doc, root) {
+  const cv = document.createElement("canvas"); cv.width = cv.height = 1;
+  const cx = cv.getContext("2d", { willReadFrequently: true });
+  const rgba = (c) => { cx.clearRect(0, 0, 1, 1); cx.fillStyle = "#000"; cx.fillStyle = c; cx.fillRect(0, 0, 1, 1); const d = cx.getImageData(0, 0, 1, 1).data; return "rgba(" + d[0] + ", " + d[1] + ", " + d[2] + ", " + +(d[3] / 255).toFixed(3) + ")"; };
+  const win = doc.defaultView;
+  for (const el of [root, ...root.querySelectorAll("*")]) {
+    const cs = win.getComputedStyle(el);
+    for (const p of COLOR_PROPS) { const v = cs[p]; if (v && MIXED.test(v)) { MIXED.lastIndex = 0; el.style[p] = v.replace(MIXED, rgba); } MIXED.lastIndex = 0; }
+    // Inline SVG is drawn as a separate image, which does not see the page's style sheet.
+    if (el instanceof win.SVGElement && el.tagName !== "svg") {
+      for (const p of ["stroke", "fill"]) { const v = cs[p]; el.setAttribute(p, v && v !== "none" ? rgba(v) : "none"); }
+      el.setAttribute("stroke-width", cs.strokeWidth); el.setAttribute("opacity", cs.opacity);
+    }
+  }
+}
+// The exported image is for printing: white throughout and darker lines, whatever theme the page is shown in.
+const PRINT = { bg: "#ffffff", ink: "#000000", muted: "#3a4450" };
+function printPalette(doc) {
+  doc.documentElement.setAttribute("data-theme", "light");
+  const st = doc.createElement("style");
+  st.textContent = ':root[data-theme="light"] { --bg: #fff; --surface: #fff; --ink: #000; --muted: #3a4450; --rule: #7d8996; --plate: #000;'
+    + ' --lane-rf: #1f2933; --lane-sc: #5a1a96; --lane-dc: #5a3d12; --warn-bg: #fff; --warn-ink: #000; color-scheme: light; }'
+    + ' .band { background: #fff !important; } .lane.rf::before { display: none; } .chip.cable { background: #fff; }';
+  doc.head.append(st);
+}
+// The renderer takes a pseudo-element's colours from the page as shown, not from the print palette,
+// so the export draws each coax lane as a real element in the print colours instead.
+function coaxLanes(doc, root) {
+  const v = (n) => doc.defaultView.getComputedStyle(doc.documentElement).getPropertyValue(n).trim();
+  for (const lane of root.querySelectorAll(".lane.rf")) {
+    // Drop the renderer's own copy of the on-screen lane, which would tint the print lane's edges.
+    for (const c of [...lane.children]) if (c.tagName.toLowerCase() === "html2canvaspseudoelement") c.remove();
+    const sc = lane.classList.contains("sc"), w = sc ? 3 : 2;
+    const s = doc.createElement("div");
+    s.style.cssText = "position:absolute;top:0;bottom:0;width:" + w + "px;left:calc(50% - " + w / 2 + "px);background:" + v(sc ? "--lane-sc" : "--lane-rf");
+    if (lane.classList.contains("empty-end")) s.style.bottom = "50%";
+    lane.append(s);
+  }
+  // Inline SVG too: give each icon and link curve its print colour directly.
+  for (const svg of root.querySelectorAll("svg")) {
+    const links = svg.classList.contains("links");
+    const col = links ? v("--lane-rf") : doc.defaultView.getComputedStyle(svg.parentElement).color;
+    const sw = doc.defaultView.getComputedStyle(svg).strokeWidth;
+    for (const e of svg.querySelectorAll("*")) {
+      if (e.tagName.toLowerCase() === "text") { e.style.setProperty("fill", col); e.style.setProperty("stroke", "none"); continue; }
+      const dot = links && e.tagName.toLowerCase() === "circle";
+      // The renderer has copied the page's computed style inline onto each SVG part, so the inline style is what to set.
+      e.style.setProperty("stroke", dot ? "none" : col); e.style.setProperty("fill", dot ? col : "none"); e.style.setProperty("opacity", "1");
+      if (!links) e.style.setProperty("stroke-width", sw);
+    }
+  }
+}
+// The renderer drops the striped gradient of a DC lane, so the export draws its four wires as thin lines.
+function dcStripes(doc, root) {
+  const st = doc.createElement("style"); st.textContent = ".lane.dc::before { display: none; }"; doc.head.append(st);
+  const c = doc.defaultView.getComputedStyle(doc.documentElement).getPropertyValue("--lane-dc").trim() || rgbOf("--lane-dc");
+  for (const lane of root.querySelectorAll(".lane.dc")) for (let i = 0; i < 4; i++) {
+    const s = doc.createElement("div");
+    s.style.cssText = "position:absolute;top:0;bottom:0;width:1.4px;opacity:1;background:" + c + ";left:calc(50% - 4px + " + (i * 2.33).toFixed(2) + "px)";
+    lane.append(s);
+  }
+}
+const sampleText = () => { const s = lastDiagram && lastDiagram.st.stages.find((x) => x.id === "sample"); const T = s && stageT(s); return T ? "  ·  Sample stage " + fmtTemp(T) : ""; };
+// A title line above the exported diagram: the log's name, then the version and the frequency the n values are for.
+function withCaption(src, k, versionText) {
+  const H = 48 * k, out = document.createElement("canvas");
+  out.width = src.width; out.height = src.height + H;
+  const cx = out.getContext("2d");
+  cx.fillStyle = PRINT.bg; cx.fillRect(0, 0, out.width, out.height);
+  cx.drawImage(src, 0, H);
+  cx.textBaseline = "alphabetic";
+  const fam = getComputedStyle(document.body).fontFamily, disp = getComputedStyle($("header.top h1")).fontFamily;
+  let x = 10 * k; const y = 31 * k;
+  cx.fillStyle = PRINT.ink; cx.font = "700 " + 24 * k + "px " + disp;
+  const title = "Slab Kiutra Wiring Log"; cx.fillText(title, x, y); x += cx.measureText(title).width + 16 * k;
+  cx.fillStyle = PRINT.muted;
+  for (const [t, italic] of [[versionText + "  ·  Noise photons ", false], ["n", true], [" at " + noiseFreqGHz + " GHz" + sampleText(), false]]) {
+    cx.font = (italic ? "italic " : "") + "400 " + 13 * k + "px " + fam;
+    cx.fillText(t, x, y); x += cx.measureText(t).width;
+  }
+  return out;
+}
+const rgbOf = (v) => { const d = h("div", { style: "display:none;color:var(" + v + ")" }); document.body.append(d); const c = getComputedStyle(d).color; d.remove(); return c || "#ffffff"; };
+async function exportDiagramImage(e) {
+  if (!lastDiagram || !lastDiagram.g.isConnected) return;
+  const btn = e.currentTarget; btn.disabled = true; btn.textContent = "Exporting…";
+  try {
+    html2imgReady = html2imgReady || loadScript(HTML2CANVAS).catch((err) => { html2imgReady = null; throw err; });
+    await html2imgReady;
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    const { g } = lastDiagram;
+    // Capture at 100% zoom; the zoom comes back afterwards.
+    const z = diagramZoom; if (z !== 1) { diagramZoom = 1; applyZoom(); drawLinks(); }
+    let canvas;
+    try {
+      canvas = await window.html2canvas(g, {
+        scale: 2, backgroundColor: PRINT.bg, logging: false, useCORS: true,
+        width: g.offsetWidth, height: g.offsetHeight,
+        ignoreElements: (n) => n.classList && n.classList.contains("add"),
+        onclone: (doc, el) => { printPalette(doc); plainColors(doc, el); dcStripes(doc, el); coaxLanes(doc, el); },
+      });
+    } finally { if (z !== 1) { diagramZoom = z; applyZoom(); drawLinks(); } }
+    const shownV = versions.find((x) => x.n === (viewingN != null ? viewingN : head().n));
+    canvas = withCaption(canvas, 2, "Version " + (shownV ? shownV.n + " · " + fmtDate(shownV.ts) : "?"));
+    const blob = await new Promise((ok) => canvas.toBlob(ok, "image/png"));
+    if (!blob) throw new Error("empty image");
+    const n = viewingN != null ? viewingN : head().n;
+    const filename = "wiring-log-v" + n + (group !== "all" ? "-" + group : "") + ".png";
+    const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
+    if (dl) { try { await dl.save({ filename, data: blob }); } catch (err) { if (err && err.code !== "cancelled" && err.code !== "declined") toast("The image was not saved"); } }
+    else if (window.claude) toast("Image export is not available in this view");
+    else { const a = h("a", { href: URL.createObjectURL(blob), download: filename }); document.body.append(a); a.click(); a.remove(); }
+  } catch { toast("Could not make the image"); }
+  if (btn.isConnected) { btn.disabled = false; btn.textContent = "Export image"; }
+}
+async function importHistory(file) {
+  try {
+    const obj = JSON.parse(await file.text());
+    const arr = obj.versions;
+    if (!Array.isArray(arr) || !arr.every((v) => typeof v.n === "number" && v.state && Array.isArray(v.state.lines))) throw new Error("not a wiring-log export");
+    backend.replaceAll(arr); if (Array.isArray(obj.versionFiles)) backend.replaceFiles(obj.versionFiles); draft = null; persistDraft(); toast("Imported " + arr.length + " versions");
+  } catch (e) { toast("Import failed: " + e.message); }
+}
+
+// ---------- Wiring up ----------
+$("#tab-diagram").onclick = () => { view = "diagram"; if (selection && selection.kind === "hist") selection = null; render(); };
+$("#tab-history").onclick = () => { view = "history"; render(); };
+for (const b of $("#groupseg").children) b.onclick = () => { group = b.dataset.g; lsSet("wiringlog-group", group); render(); };
+$("#export").onclick = exportHistory;
+$("#import").onchange = (e) => { if (e.target.files[0]) importHistory(e.target.files[0]); e.target.value = ""; };
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (!$("#viewer").hidden) { closeViewer(); return; }
+  if (selection) { selection = null; render(); }
+});
+$("#viewer-close").onclick = closeViewer;
+$("#viewer").addEventListener("click", (e) => { if (e.target.id === "viewer") closeViewer(); });
+
+(async function boot() {
+  let db = null;
+  if (window.claude && window.claude.use) {
+    [db, userNs, assetsNs] = await Promise.all([window.claude.use("db").catch(() => null), window.claude.use("user").catch(() => null), window.claude.use("assets").catch(() => null)]);
+  }
+  if (db) {
+    let canWrite = true;
+    if (userNs) { myId = await userNs.id(); const c = await userNs.can("data.write"); if (c === false) canWrite = false; }
+    backend = sharedBackend(db, canWrite);
+  } else if (location.protocol !== "file:") {
+    if (ghToken) {
+      try {
+        const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
+        if (r.ok) { const u = await r.json(); myId = u.login; people[u.login] = { name: u.login, avatarUrl: u.avatar_url }; }
+        else if (r.status === 401) { ghToken = null; try { localStorage.removeItem(TOKEN_KEY); } catch {} toast("Your GitHub token has expired or was revoked. Sign in again to edit."); }
+      } catch {}
+    }
+    backend = githubBackend();
+    if (ghToken) assetsNs = ghAssets;
+  } else {
+    backend = localBackend();
+  }
+  if (!backend.canWrite) draft = null;
+  backend.start(onVersions);
+  render();
+})();
+</script>
+
+</body></html>

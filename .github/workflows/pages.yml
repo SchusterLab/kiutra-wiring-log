@@ -1,0 +1,33 @@
+# Publish the site on every push, with a fresh dark-mode screenshot of the diagram as wallpaper.png (1920 x 1080, for kiutra-pc).
+name: Publish
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Screenshot the diagram
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 2
+          google-chrome --headless=new --no-sandbox --force-dark-mode --hide-scrollbars --window-size=1920,1080 \
+            --virtual-time-budget=15000 --screenshot="$PWD/wallpaper.png" "http://localhost:8000/index.html?wallpaper"
+          test -s wallpaper.png
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deploy
+        uses: actions/deploy-pages@v4
