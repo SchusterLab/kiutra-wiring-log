@@ -7,11 +7,12 @@ Read `README.md` first.
 
 The version files are append-only.
 Make every change by adding one new file, `data/versions/v<n>.json`, with `n` one more than the newest file's, written with four digits.
+Start it with `python scripts/new_version.py "<what changed>" --author <the user's GitHub username>`, which copies the newest version and fills in `n`, `ts`, `author` and `message`; then edit its `state`.
 Never edit, rename or delete an existing version file, even to fix a typo or reformat it.
 To undo a change, add a new version that copies an older version's `state`.
 
 Before you commit, run `python scripts/check_log.py`, and check that `git status` shows only the new version file (and any new file in `files/`) as changed.
-The script compares every version file with the commit that added it, and CI runs the same check before publishing.
+The script compares every version file with the commit that added it, checks that every part has a known type, position and stage and every link a real target, and CI runs the same check before publishing.
 If the check fails because you changed an older version, put that file back as it was; don't change the check.
 
 Write the file with two-space JSON indentation and a final newline, like the existing files.
@@ -38,7 +39,9 @@ Write the file with two-space JSON indentation and a final newline, like the exi
 Inside `state`, each line in `lines` has `id`, `group` (`"dc"` or `"rf"`), `name`, `purpose` and `items`.
 Each item is one part, listed from the top of the cryostat down: `id`, `type`, `stage` (an `id` from `stages`), `at` (`"plate"` for a part on the plate, `"region"` for one below it), `label`, `detail` and `note`.
 The types are `connector`, `cable`, `attenuator`, `filter`, `amplifier`, `isolator`, `coupler`, `diplexer`, `splitter`, `anchor` and `other`.
+They are listed in `TYPES` in both `index.html` and `scripts/check_log.py`; a new type needs adding to both.
 An item that feeds a port of a part on another line has `"link": {"line": "<line id>", "item": "<item id>", "port": "<port name>"}`.
+The target must be on another line and be an `isolator`, `coupler`, `diplexer`, `splitter` or `other`, the types with a spare port.
 A part's datasheets go in its `attachments`, in the format of `README.md`, under Datasheets.
 
 Keep the `id` of every part that stays, because the History tab matches parts between versions by `id`.

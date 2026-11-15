@@ -5,7 +5,10 @@ The publish workflow runs this; data/log.json is built, not stored in the repo. 
     python scripts/build_log.py
     python -m http.server        # then open http://localhost:8000
 """
+import sys
 from pathlib import Path
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # part names use symbols such as Ω
 
 from versions import dumps, load_all, split
 

@@ -15,16 +15,17 @@ To undo a change, add a new version whose `state` is a copy of the older version
 Every push and pull request runs `scripts/check_log.py`, which compares each version file with the commit that added it.
 If a version file was changed or deleted, the check fails and the site is not republished.
 To recover, revert the commit that changed it (`git revert <commit>`) and push.
+Force-pushes to `main` and deleting `main` are blocked, so the history the check compares against can't be rewritten.
 
 ## How to add a version
 
 In a clone of the repository:
 
-1. Copy the newest version file to the next number, for example `data/versions/v0001.json` to `data/versions/v0002.json`.
-2. In the new file, set `n` to the new number, `ts` to the current time in UTC, `author` to your GitHub username, and `message` to one line saying what changed.
-3. Make the change in its `state`, which is the complete wiring. `AGENTS.md` describes the format.
+1. Run `python scripts/new_version.py "<one line: what changed>"`. It copies the newest version file to the next number, such as `data/versions/v0002.json`, and fills in the number, the time and your GitHub username.
+2. Make the change in the new file's `state`, which is the complete wiring. `AGENTS.md` describes the format.
+3. Run `python scripts/check_log.py`. Besides protecting older versions, it reports any part on a stage that doesn't exist, of an unknown type, or connected to a part that doesn't exist.
 4. Preview it: run `python scripts/build_log.py` and then `python -m http.server`, and open http://localhost:8000.
-5. Run `python scripts/check_log.py`, then commit the new file and push to `main`.
+5. Commit the new file and push to `main`.
 
 The site shows the new version about a minute after the push.
 `scripts/build_log.py` combines the version files into `data/log.json`, the file the page reads.
