@@ -1,31 +1,35 @@
-# Publish the site on every push, with a fresh dark-mode screenshot of the diagram as wallpaper.png (1920 x 1080, for kiutra-pc).
+# Check data/log.json on every push and pull request, and publish the site from main.
 name: Publish
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check that older versions are unchanged
+        run: python3 scripts/check_log.py
   publish:
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Screenshot the diagram
-        run: |
-          python3 -m http.server 8000 >/dev/null 2>&1 &
-          sleep 2
-          google-chrome --headless=new --no-sandbox --force-dark-mode --hide-scrollbars --window-size=1920,1080 \
-            --virtual-time-budget=15000 --screenshot="$PWD/wallpaper.png" "http://localhost:8000/index.html?wallpaper"
-          test -s wallpaper.png
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .

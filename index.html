@@ -234,9 +234,6 @@ footer.foot #footsrc { display: grid; gap: 4px; min-width: 0; }
 .vfiles a { color: var(--accent); }
 footer.foot { margin-top: 20px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; }
 @media (prefers-reduced-motion: no-preference) { .chip, .btn { transition: border-color .12s, box-shadow .12s; } }
-html.wallpaper { zoom: .93; }
-.wallpaper nav.bar, .wallpaper #status, .wallpaper footer.foot, .wallpaper #banners { display: none !important; }
-.wallpaper body { padding-block: 10px 0; }
 </style>
 
 <header class="top">
@@ -277,7 +274,6 @@ html.wallpaper { zoom: .93; }
 
 <script>
 "use strict";
-if (new URLSearchParams(location.search).has("wallpaper")) { document.documentElement.classList.add("wallpaper"); document.documentElement.setAttribute("data-theme", "dark"); }
 // ---------- Baseline from the vendor drawings ----------
 const STAGES = [
   { id: "rt", name: "300 K", sub: "Top plate" },
@@ -603,7 +599,7 @@ const ITEM_FIELDS = ["type", "label", "detail", "stage", "at", "note", "link", "
 const LINE_FIELDS = ["name", "group", "purpose", "note"];
 const fval = (it, f) => (f === "link" ? JSON.stringify(it.link || null) : f === "attachments" ? JSON.stringify(it.attachments && it.attachments.length ? it.attachments : null) : (it[f] || ""));
 // Attachments: {id, kind: "file", name, asset, size} for an uploaded datasheet, {id, kind: "link", name, url} for a web link.
-// Datasheets live in the repo's files/ folder. A file uploaded on this site stores its repo path as `asset`.
+// Datasheets live in the repo's files/ folder. A file added later stores its repo path, files/..., as `asset`.
 const ASSET_PATH = {
   "7c388f2b05fd8e93143c19a1d0d9b555": "files/LNF-LNC0.3_14B_sn6142H.pdf",
   "b8773362750a47aba292797754be35d8": "files/LNF-LNC6_20D_sn5901H.pdf",
@@ -611,6 +607,8 @@ const ASSET_PATH = {
   "9dffe49aceab745a6cbba7f5b7e2de3e": "files/HERD-2-datasheet.pdf",
   "66fed11c045159cd605a161c229f783a": "files/ScalinQ-CliQ-datasheet-V1.4.pdf",
   "9717cddd398b9f9b5244c8ab9e22d8b0": "files/QMC-CRYOIRF-004.pdf",
+  "83d450ccdcbe0ab449422d0a70d11767": "files/BASPI-certificate-SlimMFT25-mOhm-SN2017.pdf",
+  "a45fed3ff1de6f79df5e0b0f8779aa08": "files/BASPI-certificate-SlimMFT25-RCRC-SN2018.pdf",
 };
 const attHref = (a) => (a.kind === "file" ? (ASSET_PATH[a.asset] || (String(a.asset).includes("/") ? a.asset : "/_blob/" + a.asset)) : a.url);
 const attName = (a) => a.name || (a.kind === "file" ? "File" : a.url);
@@ -772,131 +770,33 @@ function sharedBackend(db, canWrite) {
   };
 }
 
-// ---------- GitHub backend ----------
-// The log lives in data/log.json in the public repo, as {versions, versionFiles}. Anyone can read it. Saving needs a
-// GitHub token with write access to the repo, kept in this browser only; each save is a commit.
-const GH = { owner: "SchusterLab", repo: "kiutra-wiring-log", branch: "main", file: "data/log.json" };
-const GH_API = "https://api.github.com/repos/" + GH.owner + "/" + GH.repo;
-const TOKEN_KEY = "wiringlog-gh-token";
-let ghToken = (() => { try { return localStorage.getItem(TOKEN_KEY) || null; } catch { return null; } })();
-const ghHeaders = (extra) => ({ Accept: "application/vnd.github+json", ...(ghToken ? { Authorization: "Bearer " + ghToken } : {}), ...(extra || {}) });
-const b64 = (bytes) => { let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); };
-const ghRaw = () => fetch(GH_API + "/contents/" + GH.file + "?ref=" + GH.branch + "&t=" + Date.now(), { headers: ghHeaders({ Accept: "application/vnd.github.raw+json" }), cache: "no-store" });
-async function ghRead() {
-  // On the published site, read through the API, so a save shows at once; the site's own copy updates a minute or so later.
-  if (location.hostname.endsWith("github.io")) {
-    try { const r = await ghRaw(); if (r.ok) return await r.json(); } catch {}
-  }
-  const r = await fetch(GH.file + "?t=" + Date.now(), { cache: "no-store" });
-  if (!r.ok) throw new Error("log " + r.status);
-  return r.json();
-}
-async function ghSha(path) {
-  const dir = path.split("/").slice(0, -1).join("/");
-  const r = await fetch(GH_API + "/contents/" + dir + "?ref=" + GH.branch + "&t=" + Date.now(), { headers: ghHeaders(), cache: "no-store" });
-  if (!r.ok) throw new Error("GitHub " + r.status);
-  const f = (await r.json()).find((x) => x.path === path);
-  return f ? f.sha : null;
-}
-async function ghPut(path, base64, message, sha) {
-  const r = await fetch(GH_API + "/contents/" + path.split("/").map(encodeURIComponent).join("/"), {
-    method: "PUT", headers: ghHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ message, content: base64, branch: GH.branch, ...(sha ? { sha } : {}) }) });
-  if (r.status === 409 || r.status === 422) return { conflict: true };
-  if (!r.ok) throw new Error(r.status === 401 ? "GitHub refused the token; sign in again" : r.status === 403 || r.status === 404 ? "this GitHub token cannot write to " + GH.owner + "/" + GH.repo : "GitHub " + r.status);
-  return { ok: true };
-}
-// Read the log, change it with fn, and write it back; retried when someone else wrote in between.
-async function ghUpdateLog(message, fn) {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const sha = await ghSha(GH.file);
-    const r = await ghRaw();
-    if (!r.ok) throw new Error("GitHub " + r.status);
-    const log = await r.json();
-    const res = fn(log);
-    if (res && res.abort) return res.abort;
-    const out = await ghPut(GH.file, b64(new TextEncoder().encode(JSON.stringify(log, null, 1) + "\n")), message, sha);
-    if (out.ok) return { ok: true, log };
-  }
-  return { busy: true };
-}
+// ---------- GitHub backend (read-only) ----------
+// The log is data/log.json in the repo, as {versions, versionFiles}. The page only reads it. To change the wiring,
+// add a version to that file and push (see README.md); the site republishes a minute or so later.
+const GH_FILE = "data/log.json";
 function githubBackend() {
   let last = "", cb0 = null, lastPoll = 0;
-  const apply = (log) => {
-    const s = JSON.stringify(log); if (s === last) return; last = s;
-    versionFiles = Array.isArray(log.versionFiles) ? log.versionFiles : [];
-    const list = Array.isArray(log.versions) ? log.versions : [];
-    cb0(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]);
-  };
   const poll = async () => {
     lastPoll = Date.now();
-    try { apply(await ghRead()); } catch { if (!loaded) { loaded = true; versions = []; render(); } }
-  };
-  const fileOp = async (message, fn) => {
-    const r = await ghUpdateLog(message, (log) => { log.versionFiles = fn(Array.isArray(log.versionFiles) ? log.versionFiles : []); });
-    if (!r.ok) throw new Error("someone else is saving; try again");
-    apply(r.log);
+    try {
+      const r = await fetch(GH_FILE + "?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw new Error("log " + r.status);
+      const log = await r.json();
+      const s = JSON.stringify(log); if (s === last) return; last = s;
+      versionFiles = Array.isArray(log.versionFiles) ? log.versionFiles : [];
+      const list = Array.isArray(log.versions) ? log.versions : [];
+      cb0(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]);
+    } catch { if (!loaded) { loaded = true; versions = []; render(); } }
   };
   return {
-    mode: "github", canWrite: !!ghToken,
+    mode: "github", canWrite: false,
     start(cb) {
       cb0 = cb; poll();
       setInterval(() => { if (document.visibilityState === "visible") poll(); }, 180000);
       document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - lastPoll > 30000) poll(); });
     },
-    addFile: (f) => fileOp("Attach " + (f.name || "a file") + " to version " + f.version, (L) => [...L, f]),
-    updateFile: (id, patch) => fileOp("Rename a version file", (L) => L.map((f) => (f.id === id ? { ...f, ...patch } : f))),
-    removeFile: (id) => fileOp("Remove a version file", (L) => L.filter((f) => f.id !== id)),
-    async commit(v) {
-      const r = await ghUpdateLog("Version " + v.n + ": " + v.message, (log) => {
-        const list = Array.isArray(log.versions) ? log.versions : (log.versions = []);
-        const headN = Math.max(1, ...list.map((x) => x.n));
-        if (v.n !== headN + 1) return { abort: { conflict: true } };
-        if (!list.length) list.push(stored(baselineVersion()));
-        list.push(v);
-      });
-      if (r.ok) { apply(r.log); return { ok: true }; }
-      return r;
-    },
   };
 }
-// Uploads go into files/uploads/ in the repo. The site serves a new file a minute or so after the upload.
-const ghAssets = {
-  async upload(f) {
-    if (f.size > 20 * 1048576) throw { code: "too_large" };
-    const path = "files/uploads/" + new Date().toISOString().slice(0, 10) + "-" + uid("") + "-" + f.name.replace(/[^\w.\-]+/g, "_");
-    const r = await ghPut(path, b64(new Uint8Array(await f.arrayBuffer())), "Upload " + f.name, null);
-    if (!r.ok) throw { code: "failed" };
-    return { id: path, sizeBytes: f.size };
-  },
-};
-function ghSignIn() {
-  viewerToken++;
-  $("#viewer-title").textContent = "Sign in to edit";
-  $("#viewer-save").hidden = true;
-  const tok = h("input", { id: "f-gh-token", type: "password", autocomplete: "off", placeholder: "github_pat_…", "aria-label": "GitHub token",
-    style: "width:100%;padding:6px 8px;border:1px solid var(--rule);border-radius:5px;background:var(--surface)" });
-  const go = h("button", { class: "btn primary", onclick: async () => {
-    const t = tok.value.trim(); if (!t) { tok.focus(); return; }
-    go.disabled = true; go.textContent = "Checking…";
-    try {
-      const r = await fetch(GH_API, { headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + t } });
-      const j = r.ok ? await r.json() : null;
-      if (!j || !(j.permissions && j.permissions.push)) throw new Error(r.status === 401 ? "GitHub refused this token." : "This token cannot write to " + GH.owner + "/" + GH.repo + ".");
-      localStorage.setItem(TOKEN_KEY, t); location.reload();
-    } catch (e) { toast(e.message || "Could not check the token"); go.disabled = false; go.textContent = "Sign in"; }
-  } }, "Sign in");
-  tok.addEventListener("keydown", (e) => { if (e.key === "Enter") go.click(); });
-  const repo = GH.owner + "/" + GH.repo;
-  $("#viewer-body").replaceChildren(h("div", { class: "linkbox" },
-    h("p", {}, "Saving needs a GitHub account with write access to ", h("a", { href: "https://github.com/" + repo, target: "_blank", rel: "noopener", style: "color:var(--accent)" }, repo),
-      ". Paste a personal access token below. It stays in this browser only, so use Sign out on a shared computer."),
-    h("p", {}, "To make a token: GitHub, Settings, Developer settings, Fine-grained tokens, Generate new token. Set Resource owner to " + GH.owner +
-      ", Repository access to only " + GH.repo + ", and Contents to Read and write."),
-    tok, h("div", { class: "actions" }, go)));
-  $("#viewer").hidden = false; tok.focus();
-}
-function ghSignOut() { try { localStorage.removeItem(TOKEN_KEY); } catch {} location.reload(); }
 
 // ---------- App state ----------
 let view = "diagram";
@@ -955,7 +855,7 @@ function setStatus(kind, text) {
 }
 function render() {
   if (!backend) return;
-  if (backend.mode === "github") setStatus("live", backend.canWrite ? "Signed in as " + (myId || "a GitHub user") : "Public · read-only");
+  if (backend.mode === "github") setStatus("live", "Read-only · edit through the GitHub repo");
   else setStatus(backend.mode === "shared" ? "live" : "local", backend.mode === "shared" ? "Shared · live" : "Saved in this browser only");
   $("#tab-diagram").setAttribute("aria-pressed", view === "diagram");
   $("#tab-history").setAttribute("aria-pressed", view === "history");
@@ -990,7 +890,6 @@ function renderActions() {
     const n = pendingChanges().length;
     a.append(h("button", { class: "btn primary", disabled: !n, onclick: () => { selection = { kind: "save" }; render(); } }, n ? "Review & save (" + n + ")" : "No unsaved changes"));
   }
-  if (backend.mode === "github") a.append(h("button", { class: "btn", onclick: backend.canWrite ? ghSignOut : ghSignIn }, backend.canWrite ? "Sign out" : "Sign in to edit"));
 }
 function renderBanners() {
   const b = $("#banners"); b.replaceChildren();
@@ -1593,7 +1492,7 @@ async function saveVersion(btn) {
   render();
 }
 async function exportHistory() {
-  const data = JSON.stringify({ exported: new Date().toISOString(), versions: versions.slice().reverse().map(stored), versionFiles }, null, 2);
+  const data = JSON.stringify({ versions: versions.slice().reverse().map(stored), versionFiles }, null, 2) + "\n";
   const filename = "wiring-log-v" + (head() ? head().n : 0) + ".json";
   const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
   if (dl) { try { await dl.save({ filename, data }); } catch (e) { if (e && e.code !== "cancelled" && e.code !== "declined") toast("Export did not complete"); } return; }
@@ -1755,15 +1654,7 @@ $("#viewer").addEventListener("click", (e) => { if (e.target.id === "viewer") cl
     if (userNs) { myId = await userNs.id(); const c = await userNs.can("data.write"); if (c === false) canWrite = false; }
     backend = sharedBackend(db, canWrite);
   } else if (location.protocol !== "file:") {
-    if (ghToken) {
-      try {
-        const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
-        if (r.ok) { const u = await r.json(); myId = u.login; people[u.login] = { name: u.login, avatarUrl: u.avatar_url }; }
-        else if (r.status === 401) { ghToken = null; try { localStorage.removeItem(TOKEN_KEY); } catch {} toast("Your GitHub token has expired or was revoked. Sign in again to edit."); }
-      } catch {}
-    }
     backend = githubBackend();
-    if (ghToken) assetsNs = ghAssets;
   } else {
     backend = localBackend();
   }

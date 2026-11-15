@@ -1,4 +1,1481 @@
 {
- "versions": [],
- "versionFiles": []
+  "versions": [
+    {
+      "n": 1,
+      "ts": "2026-10-21T17:49:00Z",
+      "author": null,
+      "message": "Imported from the vendor wiring drawings",
+      "notes": "DC wiring tree J001245 (update 2026-10-16); RF wiring tree J001245 (update 2026-10-21)",
+      "state": {
+        "meta": {
+          "system": "kiutra L-Type Rapid",
+          "sources": "DC wiring tree J001245 (update 2026-10-16); RF wiring tree J001245 (update 2026-10-21)"
+        },
+        "stages": [
+          {
+            "id": "rt",
+            "name": "300 K",
+            "sub": "Top plate"
+          },
+          {
+            "id": "k40",
+            "name": "40 K",
+            "sub": "Plate"
+          },
+          {
+            "id": "k4",
+            "name": "4 K",
+            "sub": "Plate"
+          },
+          {
+            "id": "sh4",
+            "name": "4 K",
+            "sub": "Shield"
+          },
+          {
+            "id": "guard",
+            "name": "Guard",
+            "sub": "250 mK"
+          },
+          {
+            "id": "sample",
+            "name": "Sample stage",
+            "sub": "50 mK"
+          },
+          {
+            "id": "puck",
+            "name": "Puck",
+            "sub": "50 mK"
+          }
+        ],
+        "lines": [
+          {
+            "id": "M1",
+            "group": "dc",
+            "name": "M1",
+            "purpose": "24 lines\nfor large current",
+            "note": "",
+            "items": [
+              {
+                "id": "M1-1",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "D-Sub 25",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-2",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "Cu, ~3 Ω @ 300 K",
+                "note": ""
+              },
+              {
+                "id": "M1-3",
+                "type": "anchor",
+                "stage": "k40",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-4",
+                "type": "anchor",
+                "stage": "k4",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-5",
+                "type": "anchor",
+                "stage": "sh4",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-6",
+                "type": "connector",
+                "stage": "guard",
+                "at": "plate",
+                "label": "Micro-D",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-7",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "NbTi, ~18 Ω @ T > Tc",
+                "note": ""
+              },
+              {
+                "id": "M1-8",
+                "type": "connector",
+                "stage": "sample",
+                "at": "plate",
+                "label": "Micro-D",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M1-9",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "LC filter + thermalizer",
+                "detail": "Basel Precision Instruments πSlimMFT25-mΩ, 300 kHz cutoff",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "M1-att1",
+                    "kind": "file",
+                    "name": "BASPI certificate SlimMFT25-mΩ, SN 2017",
+                    "asset": "83d450ccdcbe0ab449422d0a70d11767",
+                    "size": 545051
+                  }
+                ]
+              },
+              {
+                "id": "M1-10",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "Low-impedance copper, < 0.1 Ω @ 4 K, ~0.5 Ω @ 300 K",
+                "note": ""
+              },
+              {
+                "id": "M1-11",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Puck PCB",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "M2",
+            "group": "dc",
+            "name": "M2",
+            "purpose": "24 lines\nfor small current",
+            "note": "",
+            "items": [
+              {
+                "id": "M2-12",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "D-Sub 25",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-13",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "Cu, ~3 Ω @ 300 K",
+                "note": ""
+              },
+              {
+                "id": "M2-14",
+                "type": "anchor",
+                "stage": "k40",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-15",
+                "type": "anchor",
+                "stage": "k4",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-16",
+                "type": "anchor",
+                "stage": "sh4",
+                "at": "plate",
+                "label": "Thermalized",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-17",
+                "type": "connector",
+                "stage": "guard",
+                "at": "plate",
+                "label": "Micro-D",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-18",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "NbTi, ~18 Ω @ T > Tc",
+                "note": ""
+              },
+              {
+                "id": "M2-19",
+                "type": "connector",
+                "stage": "sample",
+                "at": "plate",
+                "label": "Micro-D",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "M2-20",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "RC filter + thermalizer",
+                "detail": "Basel Precision Instruments SlimMFT25-RCRC, 30 kHz cutoff",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "M2-att1",
+                    "kind": "file",
+                    "name": "BASPI certificate SlimMFT25-100Ω-RCRC, 2018",
+                    "asset": "a45fed3ff1de6f79df5e0b0f8779aa08",
+                    "size": 388301
+                  }
+                ]
+              },
+              {
+                "id": "M2-21",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "12×2 twisted pair",
+                "detail": "Low-impedance copper, < 0.1 Ω @ 4 K, ~0.5 Ω @ 300 K",
+                "note": ""
+              },
+              {
+                "id": "M2-22",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Puck PCB",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF1",
+            "group": "rf",
+            "name": "RF1",
+            "purpose": "for charge drive",
+            "note": "",
+            "items": [
+              {
+                "id": "RF1-23",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-24",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-25",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-26",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-27",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-28",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-29",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-30",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "20 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-31",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-32",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-33",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter",
+                "detail": "Quantum Microwave, 5 dB at 10 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "qmir-att1",
+                    "kind": "file",
+                    "name": "Datasheet Quantum Microwave QMC-CRYOIRF-004",
+                    "asset": "9717cddd398b9f9b5244c8ab9e22d8b0",
+                    "size": 312195,
+                    "source": "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF1-34",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF1-35",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF2",
+            "group": "rf",
+            "name": "RF2",
+            "purpose": "for charge drive",
+            "note": "",
+            "items": [
+              {
+                "id": "RF2-36",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-37",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-38",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-39",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-40",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-41",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-42",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-43",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "20 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-44",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-45",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-46",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter",
+                "detail": "Quantum Microwave, 5 dB at 10 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "qmir-att1",
+                    "kind": "file",
+                    "name": "Datasheet Quantum Microwave QMC-CRYOIRF-004",
+                    "asset": "9717cddd398b9f9b5244c8ab9e22d8b0",
+                    "size": 312195,
+                    "source": "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF2-47",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF2-48",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF3",
+            "group": "rf",
+            "name": "RF3",
+            "purpose": "for fast flux",
+            "note": "",
+            "items": [
+              {
+                "id": "RF3-49",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-50",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-51",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-52",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-53",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-54",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-55",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-56",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-57",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-58",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-59",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "Low-pass + IR filter",
+                "detail": "ScalinQ CliQ1, cut-off 1 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "cliq-att1",
+                    "kind": "file",
+                    "name": "Datasheet ScalinQ CliQ series (V1.4)",
+                    "asset": "66fed11c045159cd605a161c229f783a",
+                    "size": 2451666
+                  }
+                ]
+              },
+              {
+                "id": "RF3-60",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF3-61",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF4",
+            "group": "rf",
+            "name": "RF4",
+            "purpose": "for fast flux",
+            "note": "",
+            "items": [
+              {
+                "id": "RF4-62",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-63",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-64",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-65",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-66",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-67",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-68",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-69",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-70",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-71",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-72",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "Low-pass + IR filter",
+                "detail": "ScalinQ CliQ1, cut-off 1 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "cliq-att1",
+                    "kind": "file",
+                    "name": "Datasheet ScalinQ CliQ series (V1.4)",
+                    "asset": "66fed11c045159cd605a161c229f783a",
+                    "size": 2451666
+                  }
+                ]
+              },
+              {
+                "id": "RF4-73",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF4-74",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF5",
+            "group": "rf",
+            "name": "RF5",
+            "purpose": "feedline port 1 in",
+            "note": "",
+            "items": [
+              {
+                "id": "RF5-75",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-76",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-77",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-78",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-79",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-80",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-81",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-82",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "20 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-83",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-84",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "30 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF5-85",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter",
+                "detail": "Quantum Microwave, 5 dB at 10 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "qmir-att1",
+                    "kind": "file",
+                    "name": "Datasheet Quantum Microwave QMC-CRYOIRF-004",
+                    "asset": "9717cddd398b9f9b5244c8ab9e22d8b0",
+                    "size": 312195,
+                    "source": "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF5-86",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": "",
+                "link": {
+                  "line": "RF6",
+                  "item": "RF6-100",
+                  "port": "Port 3"
+                }
+              },
+              {
+                "id": "RF5-87",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": "Not connected on the drawing."
+              }
+            ]
+          },
+          {
+            "id": "RF6",
+            "group": "rf",
+            "name": "RF6",
+            "purpose": "feedline port 1 out",
+            "note": "",
+            "items": [
+              {
+                "id": "RF6-88",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-89",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-90",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-91",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-92",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-93",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-94",
+                "type": "amplifier",
+                "stage": "k4",
+                "at": "region",
+                "label": "LNF-LNC0.3_14B",
+                "detail": "0.3 – 14 GHz, +37 dB",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF6-lna-att1",
+                    "kind": "file",
+                    "name": "Datasheet LNF-LNC0.3_14B (this unit)",
+                    "asset": "7c388f2b05fd8e93143c19a1d0d9b555",
+                    "size": 349490,
+                    "source": "https://www.lownoisefactory.com/datasheets/LNF-LNC0.3_14B_sn6142H.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF6-95",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-96",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "119-NbTi-NbTi",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-97",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-98",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "119-NbTi-NbTi",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-99",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-100",
+                "type": "isolator",
+                "stage": "sample",
+                "at": "region",
+                "label": "Circulator + 2 isolators",
+                "detail": "LNF-CIISISC4-12A, 4–12 GHz, 50 Ω term.",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF6-iso-att1",
+                    "kind": "file",
+                    "name": "Datasheet LNF-xxxxxxC4_12A series",
+                    "asset": "f9c92193b1561a24f16b5325b404f225",
+                    "size": 4700285,
+                    "source": "https://lownoisefactory.com/wp-content/uploads/2022/01/lnf-xxxxxxc4_12a.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF6-101",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter HERD-2",
+                "detail": "Sweden Quantum, DC – 13.5 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF6-herd-att1",
+                    "kind": "file",
+                    "name": "Datasheet Sweden Quantum HERD-2",
+                    "asset": "9dffe49aceab745a6cbba7f5b7e2de3e",
+                    "size": 817090,
+                    "source": "https://www.swedenquantum.com/docs/HERD-2%20Data%20sheet.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF6-102",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF6-103",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          },
+          {
+            "id": "RF7",
+            "group": "rf",
+            "name": "RF7",
+            "purpose": "feedline port 2 in",
+            "note": "",
+            "items": [
+              {
+                "id": "RF7-104",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-105",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-106",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "6 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-107",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-108",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "10 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-109",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-110",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-111",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "20 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-112",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "086-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-113",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "30 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF7-114",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter",
+                "detail": "Quantum Microwave, 5 dB at 10 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "qmir-att1",
+                    "kind": "file",
+                    "name": "Datasheet Quantum Microwave QMC-CRYOIRF-004",
+                    "asset": "9717cddd398b9f9b5244c8ab9e22d8b0",
+                    "size": 312195,
+                    "source": "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF7-115",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": "",
+                "link": {
+                  "line": "RF8",
+                  "item": "RF8-129",
+                  "port": "Port 3"
+                }
+              },
+              {
+                "id": "RF7-116",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": "Not connected on the drawing."
+              }
+            ]
+          },
+          {
+            "id": "RF8",
+            "group": "rf",
+            "name": "RF8",
+            "purpose": "feedline port 2 out",
+            "note": "",
+            "items": [
+              {
+                "id": "RF8-117",
+                "type": "connector",
+                "stage": "rt",
+                "at": "plate",
+                "label": "SMA",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-118",
+                "type": "cable",
+                "stage": "rt",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-119",
+                "type": "attenuator",
+                "stage": "k40",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-120",
+                "type": "cable",
+                "stage": "k40",
+                "at": "region",
+                "label": "219-SS-SS",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-121",
+                "type": "attenuator",
+                "stage": "k4",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-122",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-123",
+                "type": "amplifier",
+                "stage": "k4",
+                "at": "region",
+                "label": "LNF-LNC6_20D",
+                "detail": "4 – 20 GHz, +34 dB",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF8-lna-att1",
+                    "kind": "file",
+                    "name": "Datasheet LNF-LNC6_20D (this unit)",
+                    "asset": "b8773362750a47aba292797754be35d8",
+                    "size": 768621,
+                    "source": "https://www.lownoisefactory.com/datasheets/LNF-LNC6_20D_sn5901H.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF8-124",
+                "type": "cable",
+                "stage": "k4",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-125",
+                "type": "cable",
+                "stage": "sh4",
+                "at": "region",
+                "label": "119-NbTi-NbTi",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-126",
+                "type": "attenuator",
+                "stage": "guard",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-127",
+                "type": "cable",
+                "stage": "guard",
+                "at": "region",
+                "label": "119-NbTi-NbTi",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-128",
+                "type": "attenuator",
+                "stage": "sample",
+                "at": "plate",
+                "label": "0 dB",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-129",
+                "type": "isolator",
+                "stage": "sample",
+                "at": "region",
+                "label": "Circulator + 2 isolators",
+                "detail": "LNF-CIISISC4-12A, 4–12 GHz, 50 Ω term.",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF8-iso-att1",
+                    "kind": "file",
+                    "name": "Datasheet LNF-xxxxxxC4_12A series",
+                    "asset": "f9c92193b1561a24f16b5325b404f225",
+                    "size": 4700285,
+                    "source": "https://lownoisefactory.com/wp-content/uploads/2022/01/lnf-xxxxxxc4_12a.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF8-130",
+                "type": "filter",
+                "stage": "sample",
+                "at": "region",
+                "label": "IR filter HERD-2",
+                "detail": "Sweden Quantum, DC – 13.5 GHz",
+                "note": "",
+                "attachments": [
+                  {
+                    "id": "RF8-herd-att1",
+                    "kind": "file",
+                    "name": "Datasheet Sweden Quantum HERD-2",
+                    "asset": "9dffe49aceab745a6cbba7f5b7e2de3e",
+                    "size": 817090,
+                    "source": "https://www.swedenquantum.com/docs/HERD-2%20Data%20sheet.pdf"
+                  }
+                ]
+              },
+              {
+                "id": "RF8-131",
+                "type": "cable",
+                "stage": "sample",
+                "at": "region",
+                "label": "Flexible",
+                "detail": "",
+                "note": ""
+              },
+              {
+                "id": "RF8-132",
+                "type": "connector",
+                "stage": "puck",
+                "at": "plate",
+                "label": "Mini-coax",
+                "detail": "",
+                "note": ""
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "versionFiles": []
 }
