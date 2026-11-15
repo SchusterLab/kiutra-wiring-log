@@ -1,6 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Slab Kiutra Wiring Log</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
@@ -41,6 +44,7 @@
   --warn-bg: #3a2f12; --warn-ink: #f1d58a; color-scheme: dark;
 }
 * { box-sizing: border-box; }
+body { margin: 0; }
 body {
   background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -70,7 +74,6 @@ nav.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; ju
 .btn { border: 1px solid var(--rule); background: var(--surface); padding: 6px 12px; border-radius: 6px; font-weight: 500; }
 .btn:hover { border-color: var(--muted); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.btn.danger { color: var(--del); }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 .btn.small { padding: 3px 8px; font-size: 12px; }
 
@@ -147,10 +150,6 @@ nav.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; ju
 .atts a { color: var(--accent); font-weight: 500; overflow-wrap: anywhere; text-decoration: none; }
 .atts a:hover { text-decoration: underline; }
 .atts .sub { grid-column: 2; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
-.atts input { width: 100%; padding: 3px 6px; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); font-size: 13px; }
-.att-add { display: grid; gap: 6px; padding: 8px; border: 1px dashed var(--rule); border-radius: 5px; }
-.att-add .row { display: flex; flex-wrap: wrap; gap: 6px; }
-.att-add input { flex: 1 1 140px; min-width: 0; padding: 5px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg); }
 /* Above the chips, so a curve reaches a port drawn inside its part. */
 svg.links { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; overflow: visible; }
 svg.links path { fill: none; stroke: var(--lane-rf); stroke-width: 2; opacity: .8; }
@@ -165,10 +164,7 @@ svg.links circle { fill: var(--lane-rf); }
 /* A puck port with nothing wired to it: red, so nobody connects to it. */
 .chip.dnu { border-color: var(--del); border-width: 2px; color: var(--del); }
 .chip.dnu .d { color: var(--del); }
-.chip.changed { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
 .chip:focus-visible { outline: 2.5px solid var(--accent); }
-.add { border: 1px dashed var(--muted); background: var(--surface); color: var(--muted); border-radius: 4px; font-size: 11px; padding: 0 8px; line-height: 18px; }
-.add:hover { color: var(--accent); border-color: var(--accent); }
 /* Just right of the lane, so it reads as a value on the line rather than a part. */
 .nwrap { position: relative; max-width: 100%; display: flex; }
 .nphot { position: absolute; top: calc(100% + 2px); left: calc(50% + 6px); white-space: nowrap; z-index: 2; pointer-events: none; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.2; }
@@ -186,11 +182,6 @@ svg.links circle { fill: var(--lane-rf); }
 aside.panel { position: fixed; z-index: 5; top: 0; right: 0; bottom: 0; width: min(360px, 100vw); overflow-y: auto; align-content: start; display: grid; gap: 12px; background: var(--surface); border-left: 1px solid var(--rule); box-shadow: -8px 0 24px color-mix(in srgb, var(--ink) 18%, transparent);
   padding: calc(env(safe-area-inset-top, 0px) + 14px) max(14px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 14px) 14px; }
 aside.panel h2 { font-size: 18px; }
-.field { display: grid; gap: 4px; }
-.field label { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.field input, .field select, .field textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg); }
-.field textarea { min-height: 60px; resize: vertical; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ro dt { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .ro dd { margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
 
@@ -216,7 +207,7 @@ aside.panel h2 { font-size: 18px; }
 .cur-tag { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 1px 6px; border-radius: 3px; }
 .empty { padding: 40px 20px; text-align: center; color: var(--muted); }
 .toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 6px; z-index: 10; font-size: 13px; }
-/* File viewer: the frame cannot open the page's own files in a new tab, so they open here. */
+/* File viewer: datasheets open in the page. */
 .viewer { position: fixed; inset: 0; z-index: 20; display: flex; align-items: stretch; justify-content: center; background: color-mix(in srgb, var(--ink) 55%, transparent);
   padding: calc(env(safe-area-inset-top, 0px) + 12px) max(12px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 12px) max(12px, env(safe-area-inset-left, 0px)); }
 .viewer-box { width: min(980px, 100%); display: grid; grid-template-rows: auto minmax(0, 1fr); background: var(--surface); border-radius: 8px; overflow: hidden; }
@@ -225,16 +216,16 @@ aside.panel h2 { font-size: 18px; }
 .viewer-body { overflow: auto; background: var(--bg); padding: 12px; display: grid; gap: 12px; justify-items: center; align-content: start; }
 .viewer-body canvas, .viewer-body img { max-width: 100%; height: auto; background: #fff; box-shadow: 0 1px 4px color-mix(in srgb, var(--ink) 25%, transparent); }
 .viewer-body .text { white-space: pre-wrap; overflow-wrap: anywhere; width: 100%; max-width: 80ch; background: var(--surface); padding: 12px 14px; border-radius: 6px; }
-.viewer-body .linkbox { width: 100%; max-width: 70ch; display: grid; gap: 12px; padding: 12px 0; }
-.viewer-body .linkbox p { margin: 0; }
-.viewer-body .linkbox a.btn { text-decoration: none; color: var(--ink); }
 .viewer-body .msg { color: var(--muted); padding: 40px 12px; text-align: center; }
 footer.foot #footsrc { display: grid; gap: 4px; min-width: 0; }
 .vfiles { overflow-wrap: anywhere; }
 .vfiles a { color: var(--accent); }
 footer.foot { margin-top: 20px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; }
 @media (prefers-reduced-motion: no-preference) { .chip, .btn { transition: border-color .12s, box-shadow .12s; } }
+[hidden] { display: none !important; }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div>
@@ -265,7 +256,7 @@ footer.foot { margin-top: 20px; font-size: 12px; color: var(--muted); display: f
   <div class="viewer-box">
     <div class="viewer-head">
       <h2 id="viewer-title"></h2>
-      <span class="actions"><button class="btn small" id="viewer-save" hidden>Save a copy</button><button class="btn small" id="viewer-close">Close</button></span>
+      <span class="actions"><a class="btn small" id="viewer-save" hidden download style="text-decoration:none;color:inherit">Save a copy</a><button class="btn small" id="viewer-close">Close</button></span>
     </div>
     <div class="viewer-body" id="viewer-body"></div>
   </div>
@@ -273,35 +264,12 @@ footer.foot { margin-top: 20px; font-size: 12px; color: var(--muted); display: f
 
 <script>
 "use strict";
-// ---------- Baseline from the vendor drawings ----------
-const STAGES = [
-  { id: "rt", name: "300 K", sub: "Top plate" },
-  { id: "k40", name: "40 K", sub: "Plate" },
-  { id: "k4", name: "4 K", sub: "Plate" },
-  { id: "sh4", name: "4 K", sub: "Shield" },
-  { id: "guard", name: "Guard", sub: "250 mK" },
-  { id: "sample", name: "Sample stage", sub: "50 mK" },
-  { id: "puck", name: "Puck", sub: "50 mK" },
-];
+// ---------- Part types and their symbols ----------
 const TYPES = {
   connector: "Connector", cable: "Cable", attenuator: "Attenuator", filter: "Filter",
   amplifier: "Amplifier", isolator: "Circulator / isolator", coupler: "Directional coupler",
   diplexer: "Diplexer", splitter: "Splitter / combiner", anchor: "Thermal anchor", other: "Other",
 };
-// Parts with more than two ports: another line can connect into one of them.
-const MULTIPORT = new Set(["isolator", "coupler", "diplexer", "splitter", "other"]);
-const PORT_HINTS = {
-  isolator: ["Input", "Output", "Sample", "Port 1", "Port 2", "Port 3"],
-  coupler: ["Input", "Through", "Coupled", "Isolated"],
-  diplexer: ["Common", "Low band", "High band"],
-  splitter: ["Sum", "Port 1", "Port 2"],
-  other: ["Port 1", "Port 2", "Port 3"],
-};
-const IMPORT_MSG = "Imported from the vendor wiring drawings";
-const BASELINE_DATE = "2026-10-21T17:49:00Z";
-// Until someone saves an edit, v1 is built from the drawing data above and nothing is stored.
-const baselineVersion = () => ({ n: 1, ts: BASELINE_DATE, author: null, message: IMPORT_MSG, notes: buildBaseline().meta.sources, state: buildBaseline(), virtual: true });
-const stored = (v) => { const c = { ...v }; delete c.virtual; return c; };
 const GLYPH = {
   connector: '<rect x="4" y="4" width="10" height="10"/>',
   cable: '<path d="M9 1c-4 3 4 5 0 8s4 5 0 8"/>',
@@ -316,124 +284,8 @@ const GLYPH = {
   other: '<circle cx="9" cy="9" r="3"/>',
   clip: '<path d="M12.5 5.5 6.8 11.2a1.6 1.6 0 0 0 2.3 2.3l6-6a3.2 3.2 0 0 0-4.5-4.5l-6.2 6.2a4.8 4.8 0 0 0 6.8 6.8l4.6-4.6"/>',
 };
-let _seq = 0;
-const uid = (p) => p + Date.now().toString(36).slice(-4) + Math.random().toString(36).slice(2, 6) + (_seq++).toString(36);
-
-// The public copy leaves out files that are not public: attachments whose file is not in the repo are dropped.
-function buildBaseline() {
-  const st = buildBaseline0();
-  for (const l of st.lines) for (const it of l.items) if (it.attachments) {
-    it.attachments = it.attachments.filter((a) => a.kind !== "file" || ASSET_PATH[a.asset]);
-    if (!it.attachments.length) delete it.attachments;
-  }
-  return st;
-}
-function buildBaseline0() {
-  let k = 0;
-  const mk = (lineId, rows) => rows.map(([stage, at, type, label, detail, note, linkTo, atts]) => {
-    const it = { id: lineId + "-" + (++k), type, stage, at, label, detail: detail || "", note: note || "" };
-    if (linkTo) it._linkTo = linkTo;
-    if (atts) it.attachments = atts;
-    return it;
-  });
-  const dc = (id, name, use, filterLabel, filterDetail, filterNote, filterAtts) => ({
-    id, group: "dc", name, purpose: "24 lines\n" + use, note: "",
-    items: mk(id, [
-      ["rt", "plate", "connector", "D-Sub 25"],
-      ["rt", "region", "cable", "12×2 twisted pair", "Cu, ~3 Ω @ 300 K"],
-      ["k40", "plate", "anchor", "Thermalized"],
-      ["k4", "plate", "anchor", "Thermalized"],
-      ["sh4", "plate", "anchor", "Thermalized"],
-      ["guard", "plate", "connector", "Micro-D"],
-      ["guard", "region", "cable", "12×2 twisted pair", "NbTi, ~18 Ω @ T > Tc"],
-      ["sample", "plate", "connector", "Micro-D"],
-      ["sample", "region", "filter", filterLabel, filterDetail, filterNote, null, filterAtts],
-      ["sample", "region", "cable", "12×2 twisted pair", "Low-impedance copper, < 0.1 Ω @ 4 K, ~0.5 Ω @ 300 K"],
-      ["puck", "plate", "connector", "Puck PCB"],
-    ]),
-  });
-  const rfTop = (a40, a4) => [
-    ["rt", "plate", "connector", "SMA"],
-    ["rt", "region", "cable", "219-SS-SS"],
-    ["k40", "plate", "attenuator", a40 + " dB"],
-    ["k40", "region", "cable", "219-SS-SS"],
-    ["k4", "plate", "attenuator", a4 + " dB"],
-  ];
-  const rfIn = (id, name, purpose, aG, aS, filter, tail, note) => ({
-    id, group: "rf", name, purpose, note: note || "",
-    items: mk(id, [
-      ...rfTop(6, 10),
-      ["k4", "region", "cable", "Flexible"],
-      ["sh4", "region", "cable", "086-SS-SS"],
-      ["guard", "plate", "attenuator", aG + " dB"],
-      ["guard", "region", "cable", "086-SS-SS"],
-      ["sample", "plate", "attenuator", aS + " dB"],
-      filter,
-      ...tail,
-    ]),
-  });
-  // Vendor PDFs stored with the page (the viewer cannot open other sites); `source` is where each copy came from.
-  const sheet = (id, name, asset, size, source) => ({ id, kind: "file", name, asset, size, source });
-  const rfOut = (id, name, purpose, lna, lnaDetail, lnaSheet) => ({
-    id, group: "rf", name, purpose, note: "",
-    items: mk(id, [
-      ...rfTop(0, 0),
-      ["k4", "region", "cable", "Flexible"],
-      ["k4", "region", "amplifier", lna, lnaDetail, "", null, [sheet(id + "-lna-att1", "Datasheet " + lna + " (this unit)", ...lnaSheet)]],
-      ["k4", "region", "cable", "Flexible"],
-      ["sh4", "region", "cable", "119-NbTi-NbTi"],
-      ["guard", "plate", "attenuator", "0 dB"],
-      ["guard", "region", "cable", "119-NbTi-NbTi"],
-      ["sample", "plate", "attenuator", "0 dB"],
-      ["sample", "region", "isolator", "Circulator + 2 isolators", "LNF-CIISISC4-12A, 4–12 GHz, 50 Ω term.", "", null,
-        [sheet(id + "-iso-att1", "Datasheet LNF-xxxxxxC4_12A series", "f9c92193b1561a24f16b5325b404f225", 4700285, "https://lownoisefactory.com/wp-content/uploads/2022/01/lnf-xxxxxxc4_12a.pdf")]],
-      ["sample", "region", "filter", "IR filter HERD-2", "Sweden Quantum, DC – 13.5 GHz", "", null,
-        [sheet(id + "-herd-att1", "Datasheet Sweden Quantum HERD-2", "9dffe49aceab745a6cbba7f5b7e2de3e", 817090, "https://www.swedenquantum.com/docs/HERD-2%20Data%20sheet.pdf")]],
-      ["sample", "region", "cable", "Flexible"],
-      ["puck", "plate", "connector", "Mini-coax"],
-    ]),
-  });
-  const toPuck = [["sample", "region", "cable", "Flexible"], ["puck", "plate", "connector", "Mini-coax"]];
-  const toIso = (target) => [["sample", "region", "cable", "Flexible", "", "", { line: target, type: "isolator", port: "Port 3" }], ["puck", "plate", "connector", "Mini-coax", "", "Not connected on the drawing."]];
-  const lpir = ["sample", "region", "filter", "Low-pass + IR filter", "ScalinQ CliQ1, cut-off 1 GHz", "", null,
-    [{ id: "cliq-att1", kind: "file", name: "Datasheet ScalinQ CliQ series (V1.4)", asset: "66fed11c045159cd605a161c229f783a", size: 2451666 }]];
-  const qmIR = ["sample", "region", "filter", "IR filter", "Quantum Microwave, 5 dB at 10 GHz", "", null,
-    [sheet("qmir-att1", "Datasheet Quantum Microwave QMC-CRYOIRF-004", "9717cddd398b9f9b5244c8ab9e22d8b0", 312195, "https://quantummicrowave.com/wp-content/uploads/2023/05/2_2026_QMC_CRYOIRF-004-2.pdf")]];
-  const resolveLinks = (st) => {
-    for (const l of st.lines) for (const it of l.items) if (it._linkTo) {
-      const t = it._linkTo; delete it._linkTo;
-      const target = st.lines.find((x) => x.id === t.line).items.find((x) => x.type === t.type);
-      it.link = { line: t.line, item: target.id, port: t.port };
-    }
-    return st;
-  };
-  return resolveLinks({
-    meta: {
-      system: "kiutra L-Type Rapid",
-      sources: "DC wiring tree J001245 (update 2026-10-16); RF wiring tree J001245 (update 2026-10-21)",
-    },
-    stages: STAGES.map((s) => ({ ...s })),
-    lines: [
-      // Vendor test certificates, stored as artifact assets.
-      dc("M1", "M1", "for large current", "LC filter + thermalizer", "Basel Precision Instruments πSlimMFT25-mΩ, 300 kHz cutoff", "",
-        [{ id: "M1-att1", kind: "file", name: "BASPI certificate SlimMFT25-mΩ, SN 2017", asset: "83d450ccdcbe0ab449422d0a70d11767", size: 545051 }]),
-      dc("M2", "M2", "for small current", "RC filter + thermalizer", "Basel Precision Instruments SlimMFT25-RCRC, 30 kHz cutoff", "",
-        [{ id: "M2-att1", kind: "file", name: "BASPI certificate SlimMFT25-100Ω-RCRC, 2018", asset: "a45fed3ff1de6f79df5e0b0f8779aa08", size: 388301 }]),
-      rfIn("RF1", "RF1", "for charge drive", 20, 10, qmIR, toPuck),
-      rfIn("RF2", "RF2", "for charge drive", 20, 10, qmIR, toPuck),
-      rfIn("RF3", "RF3", "for fast flux", 0, 0, lpir, toPuck),
-      rfIn("RF4", "RF4", "for fast flux", 0, 0, lpir, toPuck),
-      rfIn("RF5", "RF5", "feedline port 1 in", 20, 30, qmIR, toIso("RF6")),
-      rfOut("RF6", "RF6", "feedline port 1 out", "LNF-LNC0.3_14B", "0.3 – 14 GHz, +37 dB", ["7c388f2b05fd8e93143c19a1d0d9b555", 349490, "https://www.lownoisefactory.com/datasheets/LNF-LNC0.3_14B_sn6142H.pdf"]),
-      rfIn("RF7", "RF7", "feedline port 2 in", 20, 30, qmIR, toIso("RF8")),
-      rfOut("RF8", "RF8", "feedline port 2 out", "LNF-LNC6_20D", "4 – 20 GHz, +34 dB", ["b8773362750a47aba292797754be35d8", 768621, "https://www.lownoisefactory.com/datasheets/LNF-LNC6_20D_sn5901H.pdf"]),
-    ],
-  });
-}
-
 // ---------- Helpers ----------
 const $ = (s) => document.querySelector(s);
-const clone = (o) => JSON.parse(JSON.stringify(o));
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -597,8 +449,9 @@ function attenuation(line) {
 const ITEM_FIELDS = ["type", "label", "detail", "stage", "at", "note", "link", "attachments"];
 const LINE_FIELDS = ["name", "group", "purpose", "note"];
 const fval = (it, f) => (f === "link" ? JSON.stringify(it.link || null) : f === "attachments" ? JSON.stringify(it.attachments && it.attachments.length ? it.attachments : null) : (it[f] || ""));
-// Attachments: {id, kind: "file", name, asset, size} for an uploaded datasheet, {id, kind: "link", name, url} for a web link.
-// Datasheets live in the repo's files/ folder. A file added later stores its repo path, files/..., as `asset`.
+// Attachments: {id, kind: "file", name, asset, size} for a file in this repository, {id, kind: "link", name, url} for a web link.
+// A file's `asset` is its path in the repository, such as files/HERD-2-datasheet.pdf. Version 1 names its files by older
+// IDs instead, which this table maps to their paths.
 const ASSET_PATH = {
   "7c388f2b05fd8e93143c19a1d0d9b555": "files/LNF-LNC0.3_14B_sn6142H.pdf",
   "b8773362750a47aba292797754be35d8": "files/LNF-LNC6_20D_sn5901H.pdf",
@@ -609,9 +462,8 @@ const ASSET_PATH = {
   "83d450ccdcbe0ab449422d0a70d11767": "files/BASPI-certificate-SlimMFT25-mOhm-SN2017.pdf",
   "a45fed3ff1de6f79df5e0b0f8779aa08": "files/BASPI-certificate-SlimMFT25-RCRC-SN2018.pdf",
 };
-const attHref = (a) => (a.kind === "file" ? (ASSET_PATH[a.asset] || (String(a.asset).includes("/") ? a.asset : "/_blob/" + a.asset)) : a.url);
+const attHref = (a) => (a.kind === "file" ? ASSET_PATH[a.asset] || a.asset : a.url);
 const attName = (a) => a.name || (a.kind === "file" ? "File" : a.url);
-const safeUrl = (s) => { try { const u = new URL(s.trim()); return u.protocol === "https:" || u.protocol === "http:" ? u.href : null; } catch { return null; } };
 const fmtSize = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " kB");
 function attachmentChanges(iA, iB) {
   const A = new Map((iA.attachments || []).map((a) => [a.id, a])), B = new Map((iB.attachments || []).map((a) => [a.id, a]));
@@ -639,9 +491,6 @@ function incomingLinks(st) {
     m.get(it.link.item).push({ line: l, item: it, port: it.link.port });
   }
   return m;
-}
-function unlinkTargets(st, ids) {
-  for (const l of st.lines) for (const it of l.items) if (it.link && ids.has(it.link.item)) delete it.link;
 }
 function diffStates(a, b) {
   const out = [];
@@ -681,181 +530,57 @@ function diffStates(a, b) {
   // dedupe stage+at double reports
   return out.filter((c, i) => out.findIndex((d) => d.text === c.text) === i);
 }
-// Three-way merge: apply the changes made between base and mine onto theirs.
-function mergeStates(base, mine, theirs) {
-  const res = clone(theirs);
-  const lBase = new Map(base.lines.map((l) => [l.id, l])), lMine = new Map(mine.lines.map((l) => [l.id, l]));
-  for (const l of base.lines) if (!lMine.has(l.id)) res.lines = res.lines.filter((x) => x.id !== l.id);
-  mine.lines.forEach((lM, idx) => {
-    const lB = lBase.get(lM.id);
-    let lR = res.lines.find((x) => x.id === lM.id);
-    if (!lB) { if (!lR) res.lines.splice(Math.min(idx, res.lines.length), 0, clone(lM)); return; }
-    if (!lR) return; // they deleted the line; their deletion wins
-    for (const f of LINE_FIELDS) if ((lB[f] || "") !== (lM[f] || "")) lR[f] = lM[f];
-    const iBase = new Map(lB.items.map((i) => [i.id, i])), iMine = new Map(lM.items.map((i) => [i.id, i]));
-    for (const it of lB.items) if (!iMine.has(it.id)) lR.items = lR.items.filter((x) => x.id !== it.id);
-    lM.items.forEach((iM, k) => {
-      const iB = iBase.get(iM.id);
-      if (!iB) {
-        const prev = lM.items[k - 1]; const at = prev ? lR.items.findIndex((x) => x.id === prev.id) : -1;
-        lR.items.splice(at + 1, 0, clone(iM)); return;
-      }
-      const iR = lR.items.find((x) => x.id === iM.id); if (!iR) return;
-      for (const f of ITEM_FIELDS) if (fval(iB, f) !== fval(iM, f)) { if (iM[f] == null) delete iR[f]; else iR[f] = clone(iM[f]); }
-    });
-  });
-  return res;
-}
-
-// ---------- Storage backends ----------
-const TAB = uid("tab");
-let backend = null; // { mode, canWrite, commit(version) }
+// ---------- Loading ----------
+// The page reads data/log.json, {versions, versionFiles}, which scripts/build_log.py builds from the version files in
+// data/versions when the site is published. To change the wiring, add a version file and push (see README.md).
+const REPO_URL = "https://github.com/SchusterLab/kiutra-wiring-log";
 let versions = []; // newest first
-let loaded = false;
-let people = {}; // id -> profile
-let userNs = null, myId = null, assetsNs = null;
-let versionFiles = []; // files and links attached to versions: {id, version, kind, name, asset | url, size, ts, author}
-
-function localBackend() {
-  const KEY = "wiringlog-history", FKEY = "wiringlog-versionfiles";
-  let list = lsGet(KEY);
-  if (!Array.isArray(list)) list = [];
-  let files = lsGet(FKEY);
-  if (!Array.isArray(files)) files = [];
-  const saveFiles = () => { lsSet(FKEY, files); versionFiles = files.slice(); render(); };
-  return {
-    mode: "local", canWrite: true,
-    start(cb) { versionFiles = files.slice(); cb(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]); },
-    async addFile(f) { files.push(f); saveFiles(); },
-    async updateFile(id, patch) { files = files.map((f) => (f.id === id ? { ...f, ...patch } : f)); saveFiles(); },
-    async removeFile(id) { files = files.filter((f) => f.id !== id); saveFiles(); },
-    replaceFiles(arr) { files = arr; saveFiles(); },
-    async commit(v) {
-      const headN = Math.max(1, ...list.map((x) => x.n));
-      if (v.n !== headN + 1) return { conflict: true };
-      if (!list.length) list.push(stored(baselineVersion()));
-      list.push(v); lsSet(KEY, list); this.start(onVersions); return { ok: true };
-    },
-    replaceAll(arr) { list = arr; lsSet(KEY, list); this.start(onVersions); },
-  };
-}
-function sharedBackend(db, canWrite) {
-  const col = db.collection("history"), fcol = db.collection("versionFiles");
-  return {
-    mode: "shared", canWrite,
-    addFile: (f) => fcol.doc(f.id).set(f),
-    updateFile: (id, patch) => fcol.doc(id).update(patch),
-    removeFile: (id) => fcol.doc(id).delete(),
-    start(cb) {
-      fcol.limit(1000).onSnapshot((snap) => { versionFiles = snap.docs.map((d) => d.data()); render(); }, () => {});
-      col.orderBy("n", "desc").limit(1000).onSnapshot(
-        (snap) => { if (snap.empty && snap.metadata.fromCache) return; cb(snap.empty ? [baselineVersion()] : snap.docs.map((d) => d.data())); },
-        (e) => { setStatus("error", "Live sync stopped (" + e.code + "). Reload the page."); }
-      );
-    },
-    async commit(v) {
-      const lock = db.doc("meta/lock");
-      let got = await lock.acquire({ holder: TAB, ttlMs: 15000 });
-      if (!got.acquired) { await new Promise((r) => setTimeout(r, 1500 + Math.random() * 1000)); got = await lock.acquire({ holder: TAB, ttlMs: 15000 }); }
-      if (!got.acquired) return { busy: true };
-      const latest = await col.orderBy("n", "desc").limit(1).get();
-      const headN = latest.empty ? 1 : latest.docs[0].data().n;
-      if (v.n !== headN + 1) return { conflict: true };
-      const path = (n) => "history/v" + String(n).padStart(5, "0");
-      if (latest.empty) await db.doc(path(1)).set(stored(baselineVersion()));
-      await db.doc(path(v.n)).set(v);
-      return { ok: true };
-    },
-  };
-}
-
-// ---------- GitHub backend (read-only) ----------
-// The page reads data/log.json, {versions, versionFiles}, which the publish workflow builds from the version files in
-// data/versions (scripts/build_log.py). To change the wiring, add a version file and push (see README.md).
-const GH_FILE = "data/log.json";
-function githubBackend() {
-  let last = "", cb0 = null, lastPoll = 0;
-  const poll = async () => {
-    lastPoll = Date.now();
-    try {
-      const r = await fetch(GH_FILE + "?t=" + Date.now(), { cache: "no-store" });
-      if (!r.ok) throw new Error("log " + r.status);
-      const log = await r.json();
-      const s = JSON.stringify(log); if (s === last) return; last = s;
-      versionFiles = Array.isArray(log.versionFiles) ? log.versionFiles : [];
-      const list = Array.isArray(log.versions) ? log.versions : [];
-      cb0(list.length ? list.slice().sort((a, b) => b.n - a.n) : [baselineVersion()]);
-    } catch { if (!loaded) { loaded = true; versions = []; render(); } }
-  };
-  return {
-    mode: "github", canWrite: false,
-    start(cb) {
-      cb0 = cb; poll();
-      setInterval(() => { if (document.visibilityState === "visible") poll(); }, 180000);
-      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - lastPoll > 30000) poll(); });
-    },
-  };
+let versionFiles = []; // files attached to whole versions: {id, version, kind, name, asset | url}
+let loaded = false, lastLoad = 0, lastLog = "";
+async function loadLog() {
+  lastLoad = Date.now();
+  try {
+    const r = await fetch("data/log.json?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const text = await r.text();
+    if (text === lastLog) return;
+    const log = JSON.parse(text);
+    lastLog = text;
+    versions = (log.versions || []).slice().sort((a, b) => b.n - a.n);
+    versionFiles = log.versionFiles || [];
+  } catch {
+    // A failed reload keeps what is shown; a failed first load shows the error.
+    if (loaded) return;
+  }
+  loaded = true;
+  render();
 }
 
 // ---------- App state ----------
 let view = "diagram";
 let group = lsGet("wiringlog-group") || "all";
-let editMode = false;
-let viewingN = null; // version number shown read-only
-let attachOpen = null; // version number whose attach box is open in History
-let selection = null; // {kind:'item', line, item} | {kind:'line', line} | {kind:'save'}
-let draft = lsGet("wiringlog-draft2"); // {base, baseState, state, message, notes}
+let viewingN = null; // version number shown instead of the current one
+let selection = null; // {kind:'item', line, item} | {kind:'line', line} | {kind:'hist', item}
 const head = () => versions[0] || null;
 function shownState() {
   if (viewingN != null) { const v = versions.find((x) => x.n === viewingN); if (v) return v.state; }
-  if (draft) return draft.state;
   return head() ? head().state : null;
 }
-function pendingChanges() { return draft ? diffStates(draft.baseState, draft.state) : []; }
-function persistDraft() {
-  if (draft && !pendingChanges().length && !draft.message) draft = null;
-  lsSet("wiringlog-draft2", draft);
-}
-function mutate(fn) {
-  if (!backend || !backend.canWrite || !head()) return;
-  if (!draft) draft = { base: head().n, baseState: clone(head().state), state: clone(head().state), message: "", notes: "" };
-  fn(draft.state);
-  persistDraft();
-  render();
-}
-function onVersions(list) {
-  versions = list; loaded = true;
-  if (draft && !versions.some((v) => v.n === draft.base) && versions.length) { /* base vanished: keep draft, merge prompt will show */ }
-  resolvePeople();
-  render();
-}
-async function resolvePeople() {
-  if (backend && backend.mode === "github") {
-    for (const id of new Set(versions.map((v) => v.author).filter(Boolean))) people[id] = people[id] || { name: id, avatarUrl: "https://github.com/" + encodeURIComponent(id) + ".png?size=40" };
-    return;
-  }
-  if (!userNs) return;
-  const ids = [...new Set(versions.map((v) => v.author).filter(Boolean))];
-  if (!ids.length) return;
-  people = await userNs.profiles(ids);
-  render();
-}
+// Authors are GitHub usernames, shown with their GitHub avatars.
 function authorEl(v) {
-  if (!v.author) return h("span", {}, v.authorNote || (backend && backend.mode === "local" ? "this browser" : "imported"));
-  const p = people[v.author];
-  return h("span", { style: "display:inline-flex;align-items:center;gap:6px" }, p ? h("img", { src: p.avatarUrl, alt: "" }) : null, (p && p.name) || "Someone");
+  if (!v.author) return h("span", {}, "no author recorded");
+  return h("span", { style: "display:inline-flex;align-items:center;gap:6px" }, h("img", { src: "https://github.com/" + encodeURIComponent(v.author) + ".png?size=40", alt: "" }), v.author);
 }
 
 // ---------- Rendering ----------
-function setStatus(kind, text) {
-  const s = $("#status"); s.replaceChildren();
-  s.append(h("span", { class: "pill" }, h("span", { class: "dot" + (kind === "live" ? " live" : "") }), text));
+function setStatus() {
+  const s = $("#status");
+  s.replaceChildren(h("span", { class: "pill" }, h("span", { class: "dot live" }), "Read-only · edit through the ",
+    h("a", { href: REPO_URL, target: "_blank", rel: "noopener", style: "color:var(--accent)" }, "GitHub repo")));
   if (head()) s.append(h("span", { class: "pill" }, "Current: version " + head().n + " · " + fmtDate(head().ts)));
 }
 function render() {
-  if (!backend) return;
-  if (backend.mode === "github") setStatus("live", ["Read-only · edit through the ", h("a", { href: "https://github.com/SchusterLab/kiutra-wiring-log", target: "_blank", rel: "noopener", style: "color:var(--accent)" }, "GitHub repo")]);
-  else setStatus(backend.mode === "shared" ? "live" : "local", backend.mode === "shared" ? "Shared · live" : "Saved in this browser only");
+  setStatus();
   $("#tab-diagram").setAttribute("aria-pressed", view === "diagram");
   $("#tab-history").setAttribute("aria-pressed", view === "history");
   $("#groupseg").hidden = view !== "diagram";
@@ -881,38 +606,14 @@ function renderActions() {
   const a = $("#topactions"); a.replaceChildren();
   if (view !== "diagram" || !head()) return;
   a.append(h("button", { class: "btn", onclick: exportDiagramImage, title: "Save the diagram as shown (selected lines, this version) as a PNG" }, "Export image"));
-  if (viewingN != null) return;
-  if (backend.canWrite) {
-    a.append(h("button", { class: "btn", "aria-pressed": editMode, onclick: () => { editMode = !editMode; if (!editMode && selection && selection.kind !== "save") selection = null; render(); } }, editMode ? "Done editing" : "Edit"));
-    if (editMode) a.append(h("button", { class: "btn", onclick: addLine }, "Add line"));
-    const n = pendingChanges().length;
-    a.append(h("button", { class: "btn primary", disabled: !n, onclick: () => { selection = { kind: "save" }; render(); } }, n ? "Review & save (" + n + ")" : "No unsaved changes"));
-  }
 }
 function renderBanners() {
   const b = $("#banners"); b.replaceChildren();
-  if (!head()) return;
-  if (viewingN != null) {
-    const v = versions.find((x) => x.n === viewingN);
-    b.append(h("div", { class: "banner info" },
-      h("span", {}, h("strong", {}, "Viewing version " + viewingN), " · " + (v ? v.message : "") + " · read-only"),
-      h("span", { class: "actions" },
-        backend.canWrite && viewingN !== head().n ? h("button", { class: "btn", onclick: () => restore(viewingN) }, "Restore this version") : null,
-        h("button", { class: "btn primary", onclick: () => { viewingN = null; render(); } }, "Back to current"))));
-  }
-  if (draft && draft.base !== head().n) {
-    b.append(h("div", { class: "banner" },
-      h("span", {}, "Version " + head().n + " was saved after you started editing (your edits are based on version " + draft.base + ")."),
-      h("span", { class: "actions" },
-        h("button", { class: "btn", onclick: mergeDraft }, "Apply my edits on top of version " + head().n),
-        h("button", { class: "btn danger", onclick: discardDraft }, "Discard my edits"))));
-  } else if (draft && pendingChanges().length && viewingN == null) {
-    b.append(h("div", { class: "banner info" },
-      h("span", {}, pendingChanges().length + " unsaved change" + (pendingChanges().length > 1 ? "s" : "") + ". Others see version " + head().n + " until you save."),
-      h("span", { class: "actions" },
-        h("button", { class: "btn danger", onclick: discardDraft }, "Discard"),
-        h("button", { class: "btn primary", onclick: () => { selection = { kind: "save" }; render(); } }, "Review & save"))));
-  }
+  if (!head() || viewingN == null) return;
+  const v = versions.find((x) => x.n === viewingN);
+  b.append(h("div", { class: "banner info" },
+    h("span", {}, h("strong", {}, "Viewing version " + viewingN), " · " + (v ? v.message : "")),
+    h("span", { class: "actions" }, h("button", { class: "btn primary", onclick: () => { viewingN = null; render(); } }, "Back to current"))));
 }
 function renderEmpty() {
   return h("div", { class: "empty" },
@@ -923,7 +624,6 @@ function renderEmpty() {
 const isSuperconducting = (l) => l.group === "rf" && l.items.some((i) => i.type === "cable" && /nbti/i.test((i.label || "") + " " + (i.detail || "")));
 function renderDiagram(st) {
   const lines = st.lines.filter((l) => group === "all" || l.group === group);
-  const changed = new Set(viewingN == null && draft ? pendingChanges().map((c) => c.item).filter(Boolean) : []);
   const g = h("div", { class: "diagram", style: "grid-template-columns: 84px " + (lines.map((l) => (l.group === "dc" ? "minmax(150px, 1.3fr)" : "minmax(128px, 1fr)")).join(" ") || "1fr") });
   const nStages = st.stages.length;
   const incoming = incomingLinks(st);
@@ -965,7 +665,7 @@ function renderDiagram(st) {
         feed && l.items.some((i) => i.stage === "puck" && rowIdx(i) > rowIdx(feed)) ? h("div", { class: "dnu" }, "DO NOT USE") : null)));
     st.stages.forEach((s, si) => {
       for (const at of ["plate", "region"]) {
-        if (s.id === "puck" && at === "region" && !l.items.some((i) => i.stage === "puck" && i.at === "region") && !editMode) continue;
+        if (s.id === "puck" && at === "region" && !l.items.some((i) => i.stage === "puck" && i.at === "region")) continue;
         const cell = h("div", { class: "cell" + (at === "region" ? " region" : ""), style: "grid-column:" + col + ";grid-row:" + rowOf(si, at) });
         l.items.filter((i) => i.stage === s.id && i.at === at).forEach((it) => {
           const isSel = selection && selection.kind === "item" && selection.item === it.id;
@@ -974,7 +674,7 @@ function renderDiagram(st) {
           const dnu = feed && it.stage === "puck" && rowIdx(it) > rowIdx(feed);
           // Port 3 faces the first line feeding the part, left unless that line sits to the right.
           const stack = stackSymbol(it, ins.length && lines.findIndex((x) => x.id === ins[0].line.id) > li ? "right" : "left");
-          const chip = (h("button", { class: "chip " + it.type + (stack ? " stacked" : "") + (dnu ? " dnu" : "") + (isSel ? " sel" : "") + (changed.has(it.id) ? " changed" : ""), "data-item": it.id, title: (TYPES[it.type] || it.type) + (it.note ? " · " + it.note : ""), onclick: () => { selection = { kind: "item", line: l.id, item: it.id }; render(); } },
+          const chip = (h("button", { class: "chip " + it.type + (stack ? " stacked" : "") + (dnu ? " dnu" : "") + (isSel ? " sel" : ""), "data-item": it.id, title: (TYPES[it.type] || it.type) + (it.note ? " · " + it.note : ""), onclick: () => { selection = { kind: "item", line: l.id, item: it.id }; render(); } },
             it.type === "anchor" || it.type === "connector" ? null : stack || glyph(it.type), h("span", { class: "l" }, it.label || "(unnamed)"), it.detail ? h("span", { class: "d" }, it.detail) : null,
             outT ? h("span", { class: "d link" }, "→ " + outT.line.name + (it.link.port ? " · " + it.link.port : "")) : null,
             ins.length ? h("span", { class: "d link" }, ins.map((x) => "← " + x.line.name + (x.port ? " · " + x.port : "")).join(", ")) : null,
@@ -984,7 +684,6 @@ function renderDiagram(st) {
             ? h("div", { class: "nwrap" }, chip, h("div", { class: "nphot", "data-nitem": it.id, title: "Noise photon occupation at " + noiseFreqGHz + " GHz" }, h("i", {}, "n"), " = " + fmtN(noise.get(it.id))))
             : chip);
         });
-        if (editMode && viewingN == null) cell.append(h("button", { class: "add", onclick: () => addItem(l.id, s.id, at), "aria-label": "Add component to " + l.name + " at " + s.name + " " + s.sub + (at === "plate" ? "" : " (below plate)") }, at === "plate" ? "+ on plate" : "+ add"));
         g.append(cell);
       }
     });
@@ -1138,105 +837,38 @@ function renderLegend() {
     h("span", {}, "Brown striped lane: DC loom; thin grey lane: coax line without superconducting cable (inputs); thick purple lane: coax line with NbTi superconducting cable (outputs); curve: line feeding a port of a multi-port part"),
     h("span", {}, "Pinch, or Ctrl + scroll, to zoom the diagram"));
 }
-function field(label, input) { return h("div", { class: "field" }, h("label", { for: input.id }, label), input); }
 function renderPanel(st) {
-  if (!selection) return null;
+  if (!selection || selection.kind === "hist") return null;
   const close = h("button", { class: "btn small", onclick: () => { selection = null; render(); } }, "Close");
-  const editable = editMode && viewingN == null && backend.canWrite;
-  if (selection.kind === "save") return renderSavePanel(close);
   const line = st.lines.find((l) => l.id === selection.line);
   if (!line) { selection = null; return null; }
-  if (selection.kind === "line") {
-    if (!editable) return h("aside", { class: "panel" }, h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Line " + line.name), close),
-      h("dl", { class: "ro" }, h("dt", {}, "Type"), h("dd", {}, line.group === "dc" ? "DC loom" : "RF coax"), h("dt", {}, "Purpose"), h("dd", {}, line.purpose || "—"), h("dt", {}, "Notes"), h("dd", {}, line.note || "—"), h("dt", {}, "Components"), h("dd", {}, String(line.items.length))),
-      backend.canWrite && viewingN == null ? h("button", { class: "btn", onclick: () => { editMode = true; render(); } }, "Edit this line") : null);
-    const upd = (f) => (e) => mutate((s) => { s.lines.find((l) => l.id === line.id)[f] = e.target.value; });
-    const idx = st.lines.indexOf(line);
-    return h("aside", { class: "panel" },
-      h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Edit line"), close),
-      field("Name", h("input", { id: "f-lname", value: line.name, onchange: upd("name") })),
-      field("Type", (() => { const s = h("select", { id: "f-lgroup", onchange: upd("group") }, h("option", { value: "dc" }, "DC loom"), h("option", { value: "rf" }, "RF coax")); s.value = line.group; return s; })()),
-      field("Purpose", h("input", { id: "f-lpurpose", value: line.purpose || "", onchange: upd("purpose") })),
-      field("Notes", (() => { const t = h("textarea", { id: "f-lnote", onchange: upd("note") }); t.value = line.note || ""; return t; })()),
-      h("div", { class: "actions" },
-        h("button", { class: "btn", disabled: idx === 0, onclick: () => mutate((s) => { const i = s.lines.findIndex((l) => l.id === line.id); s.lines.splice(i - 1, 0, s.lines.splice(i, 1)[0]); }) }, "← Move left"),
-        h("button", { class: "btn", disabled: idx === st.lines.length - 1, onclick: () => mutate((s) => { const i = s.lines.findIndex((l) => l.id === line.id); s.lines.splice(i + 1, 0, s.lines.splice(i, 1)[0]); }) }, "Move right →"),
-        h("button", { class: "btn", onclick: () => duplicateLine(line.id) }, "Duplicate"),
-        confirmBtn("Delete line", () => { mutate((s) => { const gone = s.lines.find((l) => l.id === line.id); s.lines = s.lines.filter((l) => l.id !== line.id); unlinkTargets(s, new Set(gone.items.map((x) => x.id))); }); selection = null; render(); })));
-  }
+  if (selection.kind === "line") return h("aside", { class: "panel" }, h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Line " + line.name), close),
+    h("dl", { class: "ro" }, h("dt", {}, "Type"), h("dd", {}, line.group === "dc" ? "DC loom" : "RF coax"), h("dt", {}, "Purpose"), h("dd", {}, line.purpose || "—"), h("dt", {}, "Notes"), h("dd", {}, line.note || "—"), h("dt", {}, "Components"), h("dd", {}, String(line.items.length))));
   const it = line.items.find((i) => i.id === selection.item);
   if (!it) { selection = null; return null; }
-  if (!editable) {
-    return h("aside", { class: "panel" },
-      h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, it.label || "(unnamed)"), close),
-      h("dl", { class: "ro" },
-        h("dt", {}, "Line"), h("dd", {}, line.name), h("dt", {}, "Type"), h("dd", {}, TYPES[it.type] || it.type),
-        h("dt", {}, "Location"), h("dd", {}, stageName(st, it.stage) + (it.at === "plate" ? ", on plate" : ", below plate")),
-        h("dt", {}, "Details"), h("dd", {}, it.detail || "—"), h("dt", {}, "Notes"), h("dd", {}, it.note || "—"),
-        h("dt", {}, "Datasheets and links"), h("dd", {}, it.attachments && it.attachments.length ? attList(it.attachments, null) : "—"),
-        it.link ? [h("dt", {}, "Connects to"), h("dd", {}, linkText(st, it.link))] : null,
-        incomingLinks(st).has(it.id) ? [h("dt", {}, "Fed by"), h("dd", {}, incomingLinks(st).get(it.id).map((x) => x.line.name + (x.port ? " → " + x.port : "")).join("\n"))] : null),
-      h("div", { class: "actions" },
-        backend.canWrite && viewingN == null ? h("button", { class: "btn", onclick: () => { editMode = true; render(); } }, "Edit") : null,
-        h("button", { class: "btn", onclick: () => { selection = { kind: "hist", item: it.id }; view = "history"; render(); } }, "History of this part")));
-  }
-  const upd = (f) => (e) => mutate((s) => { s.lines.find((l) => l.id === line.id).items.find((i) => i.id === it.id)[f] = e.target.value; });
-  const sel = (id, opts, val, f) => { const s = h("select", { id, onchange: upd(f) }, ...opts.map(([v, t]) => h("option", { value: v }, t))); s.value = val; return s; };
-  const ta = (id, val, f) => { const t = h("textarea", { id, onchange: upd(f) }); t.value = val || ""; return t; };
-  const move = (d) => mutate((s) => {
-    const L = s.lines.find((l) => l.id === line.id).items; const i = L.findIndex((x) => x.id === it.id);
-    let j = i + d; while (j >= 0 && j < L.length && !(L[j].stage === it.stage && L[j].at === it.at)) j += d;
-    if (j >= 0 && j < L.length) { const [x] = L.splice(i, 1); L.splice(j, 0, x); }
-  });
   return h("aside", { class: "panel" },
-    h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Edit component"), close),
-    h("div", { class: "muted" }, "Line " + line.name + ". Changes stay in your draft until you save a version."),
-    field("Type", sel("f-type", Object.entries(TYPES), it.type, "type")),
-    field("Label", h("input", { id: "f-label", value: it.label, onchange: upd("label"), placeholder: "e.g. 20 dB, SMA, 086-SS-SS" })),
-    field("Details (part number, specs)", ta("f-detail", it.detail, "detail")),
-    h("div", { class: "row2" },
-      field("Stage", sel("f-stage", st.stages.map((s) => [s.id, s.name + " " + s.sub]), it.stage, "stage")),
-      field("Position", sel("f-at", [["plate", "On plate"], ["region", "Below plate"]], it.at, "at"))),
-    field("Notes", ta("f-note", it.note, "note")),
-    renderAttachEditor(line, it),
-    renderLinkEditor(st, line, it),
+    h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, it.label || "(unnamed)"), close),
+    h("dl", { class: "ro" },
+      h("dt", {}, "Line"), h("dd", {}, line.name), h("dt", {}, "Type"), h("dd", {}, TYPES[it.type] || it.type),
+      h("dt", {}, "Location"), h("dd", {}, stageName(st, it.stage) + (it.at === "plate" ? ", on plate" : ", below plate")),
+      h("dt", {}, "Details"), h("dd", {}, it.detail || "—"), h("dt", {}, "Notes"), h("dd", {}, it.note || "—"),
+      h("dt", {}, "Datasheets and links"), h("dd", {}, it.attachments && it.attachments.length ? attList(it.attachments) : "—"),
+      it.link ? [h("dt", {}, "Connects to"), h("dd", {}, linkText(st, it.link))] : null,
+      incomingLinks(st).has(it.id) ? [h("dt", {}, "Fed by"), h("dd", {}, incomingLinks(st).get(it.id).map((x) => x.line.name + (x.port ? " → " + x.port : "")).join("\n"))] : null),
     h("div", { class: "actions" },
-      h("button", { class: "btn", onclick: () => move(-1) }, "↑ Up"),
-      h("button", { class: "btn", onclick: () => move(1) }, "↓ Down"),
-      confirmBtn("Delete", () => { mutate((s) => { const L = s.lines.find((l) => l.id === line.id); L.items = L.items.filter((x) => x.id !== it.id); unlinkTargets(s, new Set([it.id])); }); selection = null; render(); })));
+      h("button", { class: "btn", onclick: () => { selection = { kind: "hist", item: it.id }; view = "history"; render(); } }, "History of this part")));
 }
-// A clickable attachment name. Web links open in a new tab; uploaded files open in the in-page viewer.
+// A clickable attachment name. Web links open in a new tab; files in this repository open in the in-page viewer.
 function fileLink(a, text) {
-  if (a.kind !== "file") return h("a", { href: a.url, target: "_blank", rel: "noopener noreferrer", onclick: (e) => { e.preventDefault(); openWebLink(a); } }, text);
+  if (a.kind !== "file") return h("a", { href: a.url, target: "_blank", rel: "noopener noreferrer" }, text);
   return h("a", { href: attHref(a), onclick: (e) => { e.preventDefault(); openViewer(a); } }, text);
 }
-let viewerToken = 0, downloadsNs;
+let viewerToken = 0;
 const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
 const loadScript = (src) => new Promise((ok, fail) => { const s = h("script", { src }); s.onload = ok; s.onerror = () => fail(new Error("could not load " + src)); document.head.append(s); });
 let pdfjsReady = null;
 // Both pdf.js scripts load as plain scripts; with the worker code on the page, pdf.js parses on the main thread.
 const loadPdfjs = () => (pdfjsReady = pdfjsReady || loadScript(PDFJS + "pdf.min.js").then(() => loadScript(PDFJS + "pdf.worker.min.js")).then(() => window.pdfjsLib).catch((e) => { pdfjsReady = null; throw e; }));
-// Some views of the page refuse to open other sites from it. Try a new tab first; when that is refused,
-// show the address with a copy button and a plain link instead of failing silently.
-function openWebLink(a) {
-  let w = null;
-  try { w = window.open(a.url, "_blank"); } catch {}
-  if (w) { try { w.opener = null; } catch {} return; }
-  viewerToken++;
-  $("#viewer-title").textContent = attName(a);
-  $("#viewer-save").hidden = true;
-  const addr = h("div", { class: "text", style: "user-select:all" }, a.url);
-  const copy = h("button", { class: "btn primary", onclick: async () => {
-    try { await navigator.clipboard.writeText(a.url); toast("Link copied"); }
-    catch { const r = document.createRange(); r.selectNodeContents(addr); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Press Ctrl+C (⌘C on a Mac) to copy"); }
-  } }, "Copy link");
-  $("#viewer-body").replaceChildren(h("div", { class: "linkbox" },
-    h("p", {}, "This view cannot open other websites. Copy the address and paste it into your browser. To read a PDF here, download it and attach the file instead of the link."),
-    addr,
-    h("div", { class: "actions" }, copy)));
-  $("#viewer").hidden = false;
-  copy.focus();
-}
 function closeViewer() { viewerToken++; $("#viewer").hidden = true; $("#viewer-body").replaceChildren(); }
 async function openViewer(a) {
   const token = ++viewerToken;
@@ -1248,15 +880,10 @@ async function openViewer(a) {
   $("#viewer-close").focus();
   let blob;
   try { const r = await fetch(attHref(a)); if (!r.ok) throw new Error(String(r.status)); blob = await r.blob(); }
-  catch { if (token === viewerToken) body.replaceChildren(h("div", { class: "msg" }, "This file could not be loaded. It may have been removed, or it was uploaded by someone outside your organization.")); return; }
+  catch { if (token === viewerToken) body.replaceChildren(h("div", { class: "msg" }, "This file could not be loaded.")); return; }
   if (token !== viewerToken) return;
   const type = blob.type || "";
-  if (downloadsNs === undefined) downloadsNs = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
-  if (downloadsNs) {
-    save.hidden = false;
-    const ext = { "application/pdf": ".pdf", "image/png": ".png", "image/jpeg": ".jpg", "image/gif": ".gif", "image/webp": ".webp", "text/plain": ".txt", "text/csv": ".csv", "text/markdown": ".md", "application/json": ".json" }[type] || "";
-    save.onclick = async () => { try { await downloadsNs.save({ filename: attName(a).replace(/[\\/:*?"<>|]+/g, "-") + ext, data: blob }); } catch (e) { if (e && e.code !== "cancelled" && e.code !== "declined") toast("The copy was not saved"); } };
-  }
+  save.href = attHref(a); save.hidden = false;
   if (type.startsWith("image/")) { body.replaceChildren(h("img", { src: URL.createObjectURL(blob), alt: attName(a) })); return; }
   if (type.startsWith("text/") || type === "application/json") { body.replaceChildren(h("div", { class: "text" }, await blob.text())); return; }
   if (type !== "application/pdf") { body.replaceChildren(h("div", { class: "msg" }, "This file type cannot be shown here. Use Save a copy to open it on your computer.")); return; }
@@ -1279,136 +906,16 @@ async function openViewer(a) {
     if (token === viewerToken) body.replaceChildren(h("div", { class: "msg" }, "The PDF viewer did not load. Use Save a copy to open the file on your computer."));
   }
 }
-// A list of a component's attachments. With `edit` ({rename, remove}) each name is an input and each row has a Remove button.
-function attList(list, edit) {
+// A list of a part's datasheets and links.
+function attList(list) {
   return h("ul", { class: "atts" }, ...list.map((a) => {
     const icon = h("span", { html: '<svg viewBox="0 0 18 18" aria-hidden="true">' + (a.kind === "file" ? '<path d="M4 1.5h7l3.5 3.5v11.5H4Z"/><path d="M11 1.5V5h3.5M6.5 9h5M6.5 12h5"/>' : '<path d="M7.5 10.5a3 3 0 0 0 4.2 0l3-3a3 3 0 0 0-4.2-4.2L9.4 4.4M10.5 7.5a3 3 0 0 0-4.2 0l-3 3a3 3 0 0 0 4.2 4.2l1.1-1.1"/>') + "</svg>" }).firstChild;
-    const sub = a.kind === "file" ? (a.source ? "Downloaded from " + a.source : "Uploaded file") + (a.size ? " · " + fmtSize(a.size) : "") : a.url;
-    const open = fileLink(a, edit ? "Open" : attName(a));
-    if (!edit) return h("li", {}, icon, h("span", { style: "min-width:0;display:grid" }, open, h("span", { class: "sub", style: "grid-column:1" }, sub)));
-    const name = h("input", { id: "f-att-" + a.id, value: a.name || "", placeholder: a.kind === "file" ? "Name, e.g. Datasheet" : "Name, e.g. Product page", "aria-label": "File name", onchange: (e) => edit.rename(a.id, e.target.value.trim()) });
-    return h("li", {}, icon, h("span", { style: "min-width:0;display:grid;gap:3px" }, name, h("span", { class: "sub", style: "grid-column:1" }, open, " · ", sub)),
-      h("button", { class: "btn small danger", onclick: () => edit.remove(a.id), "aria-label": "Remove " + attName(a) }, "Remove"));
+    const sub = a.kind === "file" ? [a.source ? "Downloaded from " + a.source : "", a.size ? fmtSize(a.size) : ""].filter(Boolean).join(" · ") : a.url;
+    return h("li", {}, icon, h("span", { style: "min-width:0;display:grid" }, fileLink(a, attName(a)), sub ? h("span", { class: "sub", style: "grid-column:1" }, sub) : null));
   }));
 }
-// Attach datasheets (uploaded files) and web links to a component. They go into the draft like any other edit.
-function renderAttachEditor(line, it) {
-  const setAtts = (fn) => mutate((s) => { const me = s.lines.find((q) => q.id === line.id).items.find((q) => q.id === it.id); me.attachments = fn(me.attachments || []); if (!me.attachments.length) delete me.attachments; });
-  const list = it.attachments || [];
-  const edit = {
-    rename: (id, name) => setAtts((L) => L.map((a) => (a.id === id ? { ...a, name } : a))),
-    remove: (id) => setAtts((L) => L.filter((a) => a.id !== id)),
-  };
-  return h("div", { class: "field" },
-    h("label", { for: "f-att-url" }, "Datasheets and links"),
-    list.length ? attList(list, edit) : null,
-    attachForm("f-att", (added) => setAtts((L) => [...L, ...added]), "Upload datasheet", "https://… (datasheet or product page)"));
-}
-// The add box shared by components and versions: a web link with an optional name, and file uploads where this view allows them.
-function attachForm(prefix, onAdd, uploadLabel, urlHint) {
-  const url = h("input", { id: prefix + "-url", type: "url", placeholder: urlHint, "aria-label": "Link address" });
-  const lname = h("input", { id: prefix + "-lname", placeholder: "Name (optional)", "aria-label": "Link name" });
-  const addLink = () => {
-    const u = safeUrl(url.value);
-    if (!u) { toast("Enter a web address that starts with https:// or http://"); url.focus(); return; }
-    onAdd([{ id: uid("a"), kind: "link", name: lname.value.trim(), url: u }]);
-  };
-  url.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addLink(); } });
-  lname.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addLink(); } });
-  const fileIn = h("input", { type: "file", id: prefix + "-file", hidden: true, multiple: true, accept: ".pdf,application/pdf,image/png,image/jpeg,image/gif,image/webp,.txt,.csv,.md,.json" });
-  const fileBtn = h("button", { class: "btn small", onclick: () => fileIn.click() }, uploadLabel);
-  fileIn.addEventListener("change", async () => {
-    const files = [...fileIn.files]; fileIn.value = "";
-    if (!files.length) return;
-    fileBtn.disabled = true; fileBtn.textContent = "Uploading…";
-    const added = [];
-    for (const f of files) {
-      const ext = (f.name.split(".").pop() || "").toLowerCase();
-      const type = { pdf: "application/pdf", txt: "text/plain", csv: "text/csv", md: "text/markdown", json: "application/json", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp" }[ext];
-      try {
-        const r = await assetsNs.upload(f, type ? { type } : undefined);
-        added.push({ id: uid("a"), kind: "file", name: f.name.replace(/\.[^.]+$/, ""), asset: r.id, size: r.sizeBytes });
-      } catch (e) {
-        const code = e && e.code;
-        toast(f.name + ": " + (code === "too_large" ? "larger than 20 MB" : code === "unsupported_type" ? "use a PDF, image or text file" : code === "quota_or_state" ? "the log's file storage is full" : code === "rate_limited" ? "too many uploads, try again shortly" : "upload failed"));
-      }
-    }
-    if (added.length) { onAdd(added); toast(added.length === 1 ? "Attached " + added[0].name : "Attached " + added.length + " files"); }
-    else render();
-  });
-  return h("div", { class: "att-add" },
-      h("div", { class: "row" }, url),
-      h("div", { class: "row" }, lname, h("button", { class: "btn small", onclick: addLink }, "Add link")),
-      assetsNs ? h("div", { class: "row", style: "align-items:center" }, fileBtn, fileIn, h("span", { class: "muted", style: "font-size:12px" }, "PDF, image or text, up to 20 MB")) : h("div", { class: "muted", style: "font-size:12px" }, "File uploads are not available in this view. Add a link instead."));
-}
-// Files and links attached to a version (drawings, photos, measurement reports). Each is its own record, so they can be added after the version is saved.
+// Files attached to a version as a whole, such as a drawing or a photo, from the version file's `files`.
 const filesOf = (n) => versionFiles.filter((f) => f.version === n).sort((a, b) => (a.ts || "").localeCompare(b.ts || ""));
-function versionFileEdit() {
-  return backend.canWrite ? {
-    rename: (id, name) => backend.updateFile(id, { name }).catch(() => toast("Could not rename the file")),
-    remove: (id) => backend.removeFile(id).catch(() => toast("Could not remove the file")),
-  } : null;
-}
-async function addVersionFiles(n, added) {
-  try { for (const a of added) await backend.addFile({ ...a, version: n, ts: new Date().toISOString(), author: myId || null }); }
-  catch (e) { toast("Could not attach to version " + n + ": " + ((e && (e.message || e.code)) || "unknown error")); }
-}
-// Lets this part's line continue into a port of a multi-port part on another line.
-function renderLinkEditor(st, line, it) {
-  const targets = [];
-  for (const l of st.lines) if (l.id !== line.id) for (const x of l.items) if (MULTIPORT.has(x.type)) targets.push({ l, x });
-  const setLink = (fn) => mutate((s) => { const me = s.lines.find((q) => q.id === line.id).items.find((q) => q.id === it.id); fn(me); });
-  const pick = h("select", { id: "f-link", onchange: (e) => setLink((me) => {
-    if (!e.target.value) { delete me.link; return; }
-    const [lid, iid] = e.target.value.split("|");
-    const tgt = targets.find((t) => t.l.id === lid && t.x.id === iid);
-    const port = me.link && me.link.item === iid ? me.link.port : ((PORT_HINTS[tgt.x.type] || [])[0] || "");
-    me.link = { line: lid, item: iid, port };
-  }) }, h("option", { value: "" }, "Nothing (continues down its own line)"),
-    ...targets.map((t) => h("option", { value: t.l.id + "|" + t.x.id }, t.l.name + " · " + (t.x.label || "(unnamed)") + " (" + (TYPES[t.x.type] || t.x.type).toLowerCase() + ")")));
-  pick.value = it.link ? it.link.line + "|" + it.link.item : "";
-  const tgt = it.link ? findItem(st, it.link.line, it.link.item) : null;
-  const hints = h("datalist", { id: "port-hints" }, ...((tgt && PORT_HINTS[tgt.item.type]) || []).map((p) => h("option", { value: p })));
-  const port = h("input", { id: "f-port", list: "port-hints", value: (it.link && it.link.port) || "", placeholder: "e.g. Input, Coupled, Low band", onchange: (e) => setLink((me) => { if (me.link) me.link.port = e.target.value; }) });
-  const ins = incomingLinks(st).get(it.id) || [];
-  return h("div", { class: "field" },
-    h("label", { for: "f-link" }, "Connects into"),
-    pick,
-    it.link ? h("div", { class: "field" }, h("label", { for: "f-port" }, "Port"), port, hints) : null,
-    targets.length ? null : h("div", { class: "muted" }, "No multi-port parts (circulator, coupler, diplexer, splitter) on other lines yet."),
-    ins.length ? h("div", { class: "muted" }, "Fed by: " + ins.map((x) => x.line.name + (x.port ? " → " + x.port : "")).join(", ")) : null);
-}
-function confirmBtn(label, act) {
-  const b = h("button", { class: "btn danger" }, label);
-  b.addEventListener("click", () => {
-    if (b.dataset.armed) return act();
-    b.dataset.armed = "1"; b.textContent = "Click again to confirm";
-    setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = label; } }, 3000);
-  });
-  return b;
-}
-function renderSavePanel(close) {
-  const ch = pendingChanges();
-  const stale = draft && draft.base !== head().n;
-  const msg = h("input", { id: "f-msg", value: (draft && draft.message) || "", placeholder: "e.g. Swapped RF2 IR filter for a 10 dB attenuator", oninput: (e) => { draft.message = e.target.value; lsSet("wiringlog-draft2", draft); btn.disabled = !e.target.value.trim() || stale || !ch.length; } });
-  const notes = h("textarea", { id: "f-notes", placeholder: "Who did the work, when, cooldown number, measured resistances…", oninput: (e) => { draft.notes = e.target.value; lsSet("wiringlog-draft2", draft); } });
-  notes.value = (draft && draft.notes) || "";
-  const btn = h("button", { class: "btn primary", disabled: !msg.value.trim() || stale || !ch.length, onclick: () => saveVersion(btn) }, "Save as version " + (head().n + 1));
-  const pend = (draft && draft.files) || [];
-  const setPend = (fn) => { if (!draft) return; draft.files = fn(draft.files || []); lsSet("wiringlog-draft2", draft); render(); };
-  return h("aside", { class: "panel" },
-    h("div", { style: "display:flex;justify-content:space-between;gap:8px" }, h("h2", {}, "Save a new version"), close),
-    ch.length ? h("ul", { class: "changes" }, ...ch.map((c) => h("li", { class: c.kind }, c.text))) : h("p", { class: "muted" }, "No changes yet."),
-    field("Summary (required)", msg),
-    field("Notes", notes),
-    h("div", { class: "field" },
-      h("label", { for: "f-vatt-url" }, "Files for this version"),
-      pend.length ? attList(pend, { rename: (id, name) => setPend((L) => L.map((a) => (a.id === id ? { ...a, name } : a))), remove: (id) => setPend((L) => L.filter((a) => a.id !== id)) }) : null,
-      attachForm("f-vatt", (added) => setPend((L) => [...L, ...added]), "Upload file", "https://… (drawing, photo album, report)"),
-      h("div", { class: "muted", style: "font-size:12px" }, "Updated drawings, photos of the work, measurement reports. You can also attach files later from History.")),
-    stale ? h("p", { class: "muted" }, "Apply your edits on top of the latest version first (see the banner).") : null,
-    btn);
-}
 function renderHistory() {
   const wrap = h("div", { class: "history" });
   const focusItem = selection && selection.kind === "hist" ? selection.item : null;
@@ -1423,81 +930,16 @@ function renderHistory() {
         h("div", { class: "msg" }, v.message, " ", i === 0 ? h("span", { class: "cur-tag" }, "Current") : null),
         h("div", { class: "meta" }, authorEl(v), "·", fmtDate(v.ts), prev ? "· " + ch.length + " change" + (ch.length === 1 ? "" : "s") : "· first version")),
       h("div", { class: "acts" },
-        h("button", { class: "btn small", onclick: () => { viewingN = i === 0 ? null : v.n; view = "diagram"; selection = null; editMode = false; render(); } }, "View diagram"),
-        backend.canWrite ? h("button", { class: "btn small", "aria-expanded": attachOpen === v.n, onclick: () => { attachOpen = attachOpen === v.n ? null : v.n; render(); } }, attachOpen === v.n ? "Done attaching" : "Attach file") : null,
-        backend.canWrite && i !== 0 ? h("button", { class: "btn small", onclick: () => restore(v.n) }, "Restore") : null),
+        h("button", { class: "btn small", onclick: () => { viewingN = i === 0 ? null : v.n; view = "diagram"; selection = null; render(); } }, "View diagram")),
       h("div", { class: "body" },
         v.notes ? h("div", { class: "notes" }, v.notes) : null,
-        filesOf(v.n).length ? attList(filesOf(v.n), attachOpen === v.n ? versionFileEdit() : null) : null,
-        attachOpen === v.n ? attachForm("f-hatt-" + v.n, (added) => addVersionFiles(v.n, added), "Upload file", "https://… (drawing, photo album, report)") : null,
+        filesOf(v.n).length ? attList(filesOf(v.n)) : null,
         ch.length ? h("details", { open: i < 3 || focusItem ? true : null }, h("summary", {}, "Changes from v" + prev.n), h("ul", { class: "changes" }, ...ch.map((c) => h("li", { class: c.kind }, c.text)))) : null)));
   });
   return wrap;
 }
 
-// ---------- Actions ----------
-function addItem(lineId, stage, at) {
-  const id = uid("i");
-  mutate((s) => {
-    const L = s.lines.find((l) => l.id === lineId).items;
-    const order = (x) => s.stages.findIndex((q) => q.id === x.stage) * 2 + (x.at === "plate" ? 0 : 1);
-    const target = s.stages.findIndex((q) => q.id === stage) * 2 + (at === "plate" ? 0 : 1);
-    let pos = L.length; for (let k = 0; k < L.length; k++) if (order(L[k]) > target) { pos = k; break; }
-    L.splice(pos, 0, { id, type: at === "plate" ? "attenuator" : "cable", stage, at, label: "", detail: "", note: "" });
-  });
-  selection = { kind: "item", line: lineId, item: id }; render();
-  setTimeout(() => { const f = $("#f-type"); if (f) f.focus(); }, 0);
-}
-function addLine() {
-  const id = uid("L");
-  mutate((s) => { s.lines.push({ id, group: group === "dc" ? "dc" : "rf", name: "New line", purpose: "", note: "", items: [] }); });
-  selection = { kind: "line", line: id }; render();
-}
-function duplicateLine(lineId) {
-  const id = uid("L");
-  mutate((s) => {
-    const i = s.lines.findIndex((l) => l.id === lineId); const c = clone(s.lines[i]);
-    c.id = id; c.name = c.name + " copy"; c.items.forEach((it) => (it.id = uid("i")));
-    s.lines.splice(i + 1, 0, c);
-  });
-  selection = { kind: "line", line: id }; render();
-}
-function discardDraft() { draft = null; persistDraft(); if (selection && selection.kind === "save") selection = null; render(); toast("Draft discarded"); }
-function mergeDraft() {
-  draft.state = mergeStates(draft.baseState, draft.state, head().state);
-  draft.base = head().n; draft.baseState = clone(head().state);
-  persistDraft(); render(); toast("Your edits now sit on top of version " + head().n);
-}
-function restore(n) {
-  const v = versions.find((x) => x.n === n); if (!v) return;
-  draft = { base: head().n, baseState: clone(head().state), state: clone(v.state), message: "Restore version " + n, notes: (draft && draft.notes) || "" };
-  persistDraft(); viewingN = null; view = "diagram"; selection = { kind: "save" }; render();
-}
-async function saveVersion(btn) {
-  btn.disabled = true; btn.textContent = "Saving…";
-  const v = { n: head().n + 1, ts: new Date().toISOString(), author: myId, message: draft.message.trim(), notes: (draft.notes || "").trim(), state: draft.state };
-  let r;
-  try { r = await backend.commit(v); } catch (e) { r = { error: e }; }
-  if (r.ok) {
-    const files = draft.files || [];
-    draft = null; persistDraft(); selection = null; editMode = false; if (backend.mode === "shared") versions = [v, ...versions]; render(); toast("Saved version " + v.n);
-    if (files.length) await addVersionFiles(v.n, files);
-    return;
-  }
-  if (r.conflict) toast("Someone saved a newer version. Apply your edits on top of it, then save.");
-  else if (r.busy) toast("Another save is in progress. Try again in a few seconds.");
-  else toast("Could not save: " + ((r.error && (r.error.message || r.error.code)) || "unknown error"));
-  render();
-}
-async function exportHistory() {
-  const data = JSON.stringify({ versions: versions.slice().reverse().map(stored), versionFiles }, null, 2) + "\n";
-  const filename = "wiring-log-v" + (head() ? head().n : 0) + ".json";
-  const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
-  if (dl) { try { await dl.save({ filename, data }); } catch (e) { if (e && e.code !== "cancelled" && e.code !== "declined") toast("Export did not complete"); } return; }
-  if (window.claude) { toast("Export is not available in this view"); return; }
-  const a = h("a", { href: URL.createObjectURL(new Blob([data], { type: "application/json" })), download: filename }); document.body.append(a); a.click(); a.remove();
-}
-// The diagram as a PNG, at 2x and unzoomed, without the edit-mode add buttons.
+// The diagram as a PNG, at 2x and unzoomed.
 // Drawn on a canvas from the laid-out page, so it uses the page's own fonts and line breaks.
 const HTML2CANVAS = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
 let html2imgReady = null;
@@ -1602,7 +1044,6 @@ async function exportDiagramImage(e) {
       canvas = await window.html2canvas(g, {
         scale: 2, backgroundColor: PRINT.bg, logging: false, useCORS: true,
         width: g.offsetWidth, height: g.offsetHeight,
-        ignoreElements: (n) => n.classList && n.classList.contains("add"),
         onclone: (doc, el) => { printPalette(doc); plainColors(doc, el); dcStripes(doc, el); coaxLanes(doc, el); },
       });
     } finally { if (z !== 1) { diagramZoom = z; applyZoom(); drawLinks(); } }
@@ -1612,22 +1053,10 @@ async function exportDiagramImage(e) {
     if (!blob) throw new Error("empty image");
     const n = viewingN != null ? viewingN : head().n;
     const filename = "wiring-log-v" + n + (group !== "all" ? "-" + group : "") + ".png";
-    const dl = window.claude ? await window.claude.use("downloads").catch(() => null) : null;
-    if (dl) { try { await dl.save({ filename, data: blob }); } catch (err) { if (err && err.code !== "cancelled" && err.code !== "declined") toast("The image was not saved"); } }
-    else if (window.claude) toast("Image export is not available in this view");
-    else { const a = h("a", { href: URL.createObjectURL(blob), download: filename }); document.body.append(a); a.click(); a.remove(); }
+    const a = h("a", { href: URL.createObjectURL(blob), download: filename }); document.body.append(a); a.click(); a.remove();
   } catch { toast("Could not make the image"); }
   if (btn.isConnected) { btn.disabled = false; btn.textContent = "Export image"; }
 }
-async function importHistory(file) {
-  try {
-    const obj = JSON.parse(await file.text());
-    const arr = obj.versions;
-    if (!Array.isArray(arr) || !arr.every((v) => typeof v.n === "number" && v.state && Array.isArray(v.state.lines))) throw new Error("not a wiring-log export");
-    backend.replaceAll(arr); if (Array.isArray(obj.versionFiles)) backend.replaceFiles(obj.versionFiles); draft = null; persistDraft(); toast("Imported " + arr.length + " versions");
-  } catch (e) { toast("Import failed: " + e.message); }
-}
-
 // ---------- Wiring up ----------
 $("#tab-diagram").onclick = () => { view = "diagram"; if (selection && selection.kind === "hist") selection = null; render(); };
 $("#tab-history").onclick = () => { view = "history"; render(); };
@@ -1640,24 +1069,9 @@ document.addEventListener("keydown", (e) => {
 $("#viewer-close").onclick = closeViewer;
 $("#viewer").addEventListener("click", (e) => { if (e.target.id === "viewer") closeViewer(); });
 
-(async function boot() {
-  let db = null;
-  if (window.claude && window.claude.use) {
-    [db, userNs, assetsNs] = await Promise.all([window.claude.use("db").catch(() => null), window.claude.use("user").catch(() => null), window.claude.use("assets").catch(() => null)]);
-  }
-  if (db) {
-    let canWrite = true;
-    if (userNs) { myId = await userNs.id(); const c = await userNs.can("data.write"); if (c === false) canWrite = false; }
-    backend = sharedBackend(db, canWrite);
-  } else if (location.protocol !== "file:") {
-    backend = githubBackend();
-  } else {
-    backend = localBackend();
-  }
-  if (!backend.canWrite) draft = null;
-  backend.start(onVersions);
-  render();
-})();
+loadLog();
+setInterval(() => { if (document.visibilityState === "visible") loadLog(); }, 180000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - lastLoad > 30000) loadLog(); });
 </script>
 
 </body></html>
