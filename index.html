@@ -855,7 +855,7 @@ function setStatus(kind, text) {
 }
 function render() {
   if (!backend) return;
-  if (backend.mode === "github") setStatus("live", "Read-only · edit through the GitHub repo");
+  if (backend.mode === "github") setStatus("live", ["Read-only · edit through the ", h("a", { href: "https://github.com/SchusterLab/kiutra-wiring-log", target: "_blank", rel: "noopener", style: "color:var(--accent)" }, "GitHub repo")]);
   else setStatus(backend.mode === "shared" ? "live" : "local", backend.mode === "shared" ? "Shared · live" : "Saved in this browser only");
   $("#tab-diagram").setAttribute("aria-pressed", view === "diagram");
   $("#tab-history").setAttribute("aria-pressed", view === "history");
